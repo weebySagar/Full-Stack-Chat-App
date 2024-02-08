@@ -4,6 +4,7 @@ import React from 'react';
 import HomePage from '@pages/HomePage';
 import SignupPage from '@pages/SignupPage';
 import LoginPage from '@pages/LoginPage';
+import './styles/index.css'
 
 function App() {
 
