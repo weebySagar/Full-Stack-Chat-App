@@ -1,10 +1,11 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter,BrowserRouter } from 'react-router-dom';
 import React from 'react';
 
 import HomePage from '@pages/HomePage';
 import SignupPage from '@pages/SignupPage';
 import LoginPage from '@pages/LoginPage';
 import './styles/index.css'
+import Header from '@components/Header';
 
 function App() {
 

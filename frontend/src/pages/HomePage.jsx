@@ -1,9 +1,12 @@
-import React from 'react'
+import Header from "@components/Header";
+import React from "react";
 
 export default function HomePage() {
   return (
-    <div>
-        <h1 className='text-3xl underline text-red-500'>Homepage</h1>
-    </div>
-  )
+    <main className="mt-[100px]">
+      <Header />
+
+      <h1 className="text-3xl underline text-red-500">Homepage</h1>
+    </main>
+  );
 }
