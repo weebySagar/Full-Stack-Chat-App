@@ -10,3 +10,13 @@ export const addUser = async(userData)=>{
         throw error.response.data;
     }
 }
+
+export const loginUser = async(userData)=>{
+    try {
+        const {data} = await axios.post(BASE_URL+'/user/login',userData);
+        localStorage.setItem('chat-token',data.token)
+    } catch (error) {
+        console.log(error);
+        throw error.response.data
+    }
+}
