@@ -7,6 +7,7 @@ export default function Button({
   children,
   onClick,
   href,
+  className
 }) {
   return (
     <>
@@ -17,7 +18,7 @@ export default function Button({
               ? "bg-transparent text-teal-500 hover:bg-teal-500/20"
               : ""
           }
-      transition-all hover:scale-105`}
+      transition-all hover:scale-105 ${className}`}
           onClick={onClick}
         >
           {children}
@@ -29,7 +30,7 @@ export default function Button({
               ? "bg-transparent text-teal-500 hover:bg-teal-500/20"
               : ""
           }
-      transition-all hover:scale-105`}
+      transition-all hover:scale-105 ${className}`}
           to={href}
         >
           {children}

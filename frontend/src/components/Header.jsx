@@ -8,13 +8,17 @@ export default function Header() {
       <div className="mx-auto py-3 px-5">
         <div className="flex justify-between items-center">
           <div className="navbar-logo ">
-            <h3 className="text-2xl font-Lato">Chat Hub</h3>
+            <Link to="/">
+              <h3 className="text-2xl font-Lato">Chat Hub</h3>
+            </Link>
           </div>
           <div className="navbar-links flex gap-2">
             <Button as="Link" href="/login" variant={"outline"}>
               Log in
             </Button>
-            <Button>Sign up</Button>
+            <Button as="Link" href="/register">
+              Sign up
+            </Button>
           </div>
         </div>
       </div>
