@@ -3,7 +3,7 @@ import React from "react";
 import Header from "@components/Header";
 import SignUpImg from "@images/signup.svg";
 import FormWrapper from "@components/FormWrapper";
-import SignupForm from "@components/SignupForm";
+import SignupForm from "@components/forms/SignupForm";
 
 export default function SignupPage() {
   return (
