@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 import { validateForm } from "@components/forms/validateForm";
+import { addUser } from "../services/apiServices";
+import Toast from "@components/ui/Toast";
 
 export default function useSignupForm() {
   const [formValues, setFormValues] = useState({
@@ -20,9 +22,24 @@ export default function useSignupForm() {
 
   const [errors, setErrors] = useState({});
 
+  const handleReset = () => {
+    setFormValues({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(validateForm(formValues));
+    const { errors, valid } = validateForm(formValues);
+    setErrors(errors);
+    if (valid) {
+      const user = addUser(formValues);
+      Toast(user,'Loading...',handleReset,'User created successfully',)
+    }
   };
-  return { handleChange, formValues, handleSubmit,errors };
+
+  return { handleChange, formValues, handleSubmit, errors };
 }

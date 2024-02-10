@@ -6,6 +6,7 @@ import SignupPage from '@pages/SignupPage';
 import LoginPage from '@pages/LoginPage';
 import './styles/index.css'
 import Header from '@components/Header';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
   return (
     <>
      <RouterProvider router={router}/>
+     <Toaster/>
     </>
   )
 }
