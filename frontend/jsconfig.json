@@ -6,7 +6,8 @@
         "@assets/*": ["./src/assets/*"],
         "@styles/*": ["./src/assets/styles/*"],
         "@images/*": ["./src/assets/images/*"],
-        "@pages/*" : ["./src/pages/*"]
+        "@pages/*" : ["./src/pages/*"],
+        "@hooks/*":["./src/hooks/*"]
       }
     }
   }
