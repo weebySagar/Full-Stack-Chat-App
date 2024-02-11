@@ -15,6 +15,29 @@ export default {
     },
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    function ({addUtilities}){
+      const newUtilities ={
+        ".scrollbar-thin":{
+          scrollbarWidth:"thin",
+          scollbarColor: "#134e4a"
+        },
+        ".scrollbar-webkit":{
+          "&::-webkit-scrollbar" : {
+            width:"8px"
+          },
+          "&::-webkit-scrollbar-track":{
+            background:"transparent"
+          },
+          "&::-webkit-scrollbar-thumb" :{
+            background:"rgb(163 163 163)",
+            borderRadius : "20px"
+          }
+        }
+      }
+
+      addUtilities(newUtilities,["responsive","hover"])
+    }
+  ],
 }
 

@@ -33,7 +33,7 @@ export default function useSignupForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { errors, valid } = validateForm(formValues);
+    const { errors, valid } = validateForm(formValues,true);
     setErrors(errors);
     if (valid) {
       const user = addUser(formValues);
