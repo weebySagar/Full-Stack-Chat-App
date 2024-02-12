@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import ChatBg from "@images/bg-illustrations.jfif";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
+import { getMessage } from "../../services/chatServices";
 // import ChatBg from "@images/whatsapp-light-bg.png"
 // import ChatBg from "@images/whatsapp-dark-bg.png"
 
 export default function ChatWindow() {
+  const [messages,setMessages] = useState([])
+
+
+  useEffect(()=>{
+    getMessage(setMessages)
+  },[])
   return (
     <div className="chat-window relative bg-neutral-300 h-full">
       <div
@@ -14,6 +21,9 @@ export default function ChatWindow() {
         style={{ backgroundImage: `url(${ChatBg})` }}
       ></div>
       <ChatHeader />
+      {
+        messages.map(msg=><p key={msg.id}>{msg?.content}</p>)
+      }
       <ChatInput />
     </div>
   );

@@ -22,3 +22,19 @@ exports.sendMessage = async (req,res) =>{
         res.status(500).send('Internal server error')
     }
 }
+
+
+exports.getMessage = async (req,res) =>{
+    try {
+        const messages = await Message.findAll({where:{userId : req.user.id}});
+
+        if(messages){
+            res.status(200).send(messages)
+        }
+        else{
+            res.status(200).send('No messages')
+        }
+    } catch (error) {
+        res.status(500).send('Internal server error')
+    }
+}
