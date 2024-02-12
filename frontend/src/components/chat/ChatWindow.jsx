@@ -12,7 +12,11 @@ export default function ChatWindow() {
 
 
   useEffect(()=>{
-    getMessage(setMessages)
+    setInterval(()=>getMessage(setMessages),1000)
+    // setInterval(
+
+    //   getMessage(setMessages),1000
+    // )
   },[])
   return (
     <div className="chat-window relative bg-neutral-300 h-full">
