@@ -4,6 +4,7 @@ import { validateForm } from "@components/forms/validateForm";
 import { loginUser } from "../services/apiServices";
 import Toast from '@components/ui/Toast';
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 
 export default function useLoginForm() {
@@ -36,8 +37,15 @@ export default function useLoginForm() {
     setErrors(errors);
     if(valid){
       const user = loginUser(formValues);
-      Toast(user,'Loading...',handleReset,'Login successfully',)
-      navigate('/chat')
+      // Toast(user,'Loading...',handleReset,'Login successfully',)
+      toast.promise(user,{
+        loading:'Loading...',
+        success:()=>{
+          navigate('/chat')
+          return 'Login successfully'},
+        error:(err)=>err.toString()
+      })
+      // navigate('/chat')
         
     }
   };
