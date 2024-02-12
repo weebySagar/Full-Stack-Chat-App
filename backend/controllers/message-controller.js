@@ -1,19 +1,21 @@
 const Message = require('../models/message-model');
 const sequelize = require('../db/database');
 
-exports.sendMessage = async (req,res) =>{
-    const {msg} =  req.body;
+const {Op} = require('sequelize')
+
+exports.sendMessage = async (req, res) => {
+    const { msg } = req.body;
     const userId = req.user.id;
     const t = await sequelize.transaction();
 
     try {
-        const response = await Message.create({content:msg,userId},{transaction:t})
+        const response = await Message.create({ content: msg, userId }, { transaction: t })
 
-        if(response){
+        if (response) {
             await t.commit();
             res.status(201).send('Message sent successfully')
         }
-        else{
+        else {
             await t.rollback();
             res.status(400).send('Message cannot send')
         }
@@ -24,14 +26,25 @@ exports.sendMessage = async (req,res) =>{
 }
 
 
-exports.getMessage = async (req,res) =>{
+exports.getMessage = async (req, res) => {
     try {
-        const messages = await Message.findAll({where:{userId : req.user.id}});
+        const { lastMsgId } = req.query
 
-        if(messages){
-            res.status(200).send(messages)
+        let messages;
+        if(lastMsgId){
+            messages = await Message.findAll({ where: { id:{[Op.gt]:lastMsgId},userId: req.user.id } });
         }
         else{
+
+            messages = await Message.findAll({ where: { userId: req.user.id } });
+        }
+
+
+
+        if (messages) {
+            res.status(200).send(messages)
+        }
+        else {
             res.status(200).send('No messages')
         }
     } catch (error) {

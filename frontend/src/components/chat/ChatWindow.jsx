@@ -8,16 +8,24 @@ import { getMessage } from "../../services/chatServices";
 // import ChatBg from "@images/whatsapp-dark-bg.png"
 
 export default function ChatWindow() {
-  const [messages,setMessages] = useState([])
+  const [messages, setMessages] = useState([]);
 
+  useEffect(() => {
+    const storedMsgs = JSON.parse(localStorage.getItem("chathub-messages"));
+    setMessages(storedMsgs);
 
-  useEffect(()=>{
-    setInterval(()=>getMessage(setMessages),1000)
-    // setInterval(
+    const fetchRecentMessages = async() =>{
+      const lastMsgId = storedMsgs[storedMsgs.length-1].id
+      const newMsgs = await getMessage(lastMsgId);
 
-    //   getMessage(setMessages),1000
-    // )
-  },[])
+      const updatedMsg = [...storedMsgs,...newMsgs].slice(-10);
+      localStorage.setItem("chathub-messages",JSON.stringify(updatedMsg));
+      setMessages(updatedMsg)
+    }
+
+    fetchRecentMessages();
+  }, []);
+
   return (
     <div className="chat-window relative bg-neutral-300 h-full">
       <div
@@ -25,9 +33,9 @@ export default function ChatWindow() {
         style={{ backgroundImage: `url(${ChatBg})` }}
       ></div>
       <ChatHeader />
-      {
-        messages.map(msg=><p key={msg.id}>{msg?.content}</p>)
-      }
+      {messages.map((msg) => (
+        <p key={msg.id}>{msg?.content}</p>
+      ))}
       <ChatInput />
     </div>
   );

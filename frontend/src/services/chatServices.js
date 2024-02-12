@@ -16,14 +16,15 @@ export const sendMessage =async (msg) =>{
     }
 }
 
-export const getMessage =async (setMessages) =>{
+export const getMessage =async (lastMsgId) =>{
     try {
-        const {data} = await axios.get(BASE_URL+'/message',{
+        const {data} = await axios.get(BASE_URL+'/message?lastMsgId='+lastMsgId,{
             headers:{
                 'Authorization' :localStorage.getItem('chat-token')
             }
         });
-        return setMessages(data);
+        console.log(data);
+        return data;
     } catch (error) {
         throw error.response.data;
     }
