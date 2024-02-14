@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const {Op} = require('sequelize')
 
 const User = require('../models/user-model');
 const sequelize = require('../db/database');
@@ -48,5 +49,24 @@ exports.loginUser = async(req,res)=>{
         }
     } catch (error) {
         res.status(500).json('Internal server error')
+    }
+}
+
+
+exports.getSearchedUser = async(req,res) =>{
+    try {
+        const {email} = req.query;
+
+        const users = await User.findAll({
+            where:{
+                email:{
+                    [Op.like] :`${email}%`
+                }
+            }
+        })
+
+        res.send(users)
+    } catch (error) {
+        res.status(500).send('Internal server error')
     }
 }

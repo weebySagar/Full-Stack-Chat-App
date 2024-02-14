@@ -20,3 +20,16 @@ export const loginUser = async(userData)=>{
         throw error.response.data
     }
 }
+
+export const getSearchUser = async(email)=>{
+    try {
+        const {data} = await axios.get(BASE_URL+'/user?email='+email,{
+            headers:{
+                Authorization:localStorage.getItem('chat-token')
+            }
+        });
+        return data
+    } catch (error) {
+        throw error.response.data
+    }
+}

@@ -11,11 +11,14 @@ export default function ChatWindow() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const storedMsgs = JSON.parse(localStorage.getItem("chathub-messages"));
+    const storedMsgs = JSON.parse(localStorage.getItem("chathub-messages")) ?? [];
     setMessages(storedMsgs);
 
     const fetchRecentMessages = async() =>{
-      const lastMsgId = storedMsgs[storedMsgs.length-1].id
+      let lastMsgId = null;
+      if(storedMsgs.length > 0){
+         lastMsgId = storedMsgs[storedMsgs.length-1].id || null
+      }
       const newMsgs = await getMessage(lastMsgId);
 
       const updatedMsg = [...storedMsgs,...newMsgs].slice(-10);
@@ -33,7 +36,7 @@ export default function ChatWindow() {
         style={{ backgroundImage: `url(${ChatBg})` }}
       ></div>
       <ChatHeader />
-      {messages.map((msg) => (
+      {messages?.map((msg) => (
         <p key={msg.id}>{msg?.content}</p>
       ))}
       <ChatInput />

@@ -23,7 +23,6 @@ export const getMessage =async (lastMsgId) =>{
                 'Authorization' :localStorage.getItem('chat-token')
             }
         });
-        console.log(data);
         return data;
     } catch (error) {
         throw error.response.data;

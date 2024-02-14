@@ -2,6 +2,8 @@ const Sequelize = require('sequelize');
 
 const db = require('../db/database');
 const User = require('./user-model');
+const Group = require('./group-model');
+
 
 const Message = db.define('message',{
     id:{
@@ -27,5 +29,7 @@ const Message = db.define('message',{
 User.hasMany(Message);
 Message.belongsTo(User)
 
+Group.hasMany(Message);
+Message.belongsTo(Group)
 
 module.exports = Message
