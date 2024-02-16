@@ -6,6 +6,7 @@ const db = require('./db/database');
 
 const userRoutes = require('./routes/user-route');
 const messageRoutes = require('./routes/message-route');
+const groupRoutes = require('./routes/group-route');
 
 require('dotenv').config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use('/api/user',userRoutes);
 app.use('/api/message',messageRoutes);
+app.use('/api/group',groupRoutes);
 
 db.sync(
     // {force:true}

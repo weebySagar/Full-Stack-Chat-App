@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 
 
 import { getSearchUser } from "../services/apiServices";
+import {createGroup} from "../services/groupServices"
 
 
 export default function useGroupForm() {
@@ -46,6 +47,7 @@ export default function useGroupForm() {
     setSelectedUsersSet(new Set([...selectedUsersSet, user.email]));
     inputRef.current.value = "";
     setSearchedUser([]);
+    inputRef.current.focus()
   };
 
   const handleRemoveSelectedUser = (user) => {
@@ -64,7 +66,7 @@ export default function useGroupForm() {
     setSelectedUsers([]);
     setSearchedUser([]);
     setSelectedUsersSet(new Set());
-    closeModal()
+    // closeModal()
   };
 
   return {
@@ -77,6 +79,7 @@ export default function useGroupForm() {
     handleRemoveSelectedUser,
     handleReset,
     handleChange,
-    inputRef
+    inputRef,
+    // handleSubmit
   };
 }

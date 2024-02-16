@@ -4,6 +4,8 @@ import Input from "@components/ui/Input";
 import Badge from "@components/ui/Badge";
 import UserList from "./UserList";
 import useGroupForm from "@hooks/useGroupForm";
+import { createGroup } from "../../services/groupServices";
+import useFetch from "@hooks/useFetch";
 
 export default function GroupForm({ closeModal }) {
   const {
@@ -16,8 +18,20 @@ export default function GroupForm({ closeModal }) {
     handleReset,
     inputRef,
     optimisedChange,
-    handleRemoveSelectedUser
+    handleRemoveSelectedUser,
+    // handleSubmit
   } = useGroupForm();
+
+  const {loading,fetchData} = useFetch()
+
+  const handleSubmit=async()=>{
+    const users = selectedUsers.map(user=>user.id);
+    fetchData(createGroup,groupName,users).then(()=>{
+      handleReset();
+      closeModal()
+    })
+    
+  }
 
   return (
     <>
@@ -79,9 +93,13 @@ export default function GroupForm({ closeModal }) {
         <button
           type="button"
           className="inline-flex justify-center rounded-md border border-transparent bg-teal-600  px-4 py-2 text-sm font-medium text-white  focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
-          onClick={() => handleReset(closeModal)}
+          onClick={ handleSubmit}
+          disabled={loading}
         >
-          Create group
+          {
+            loading ? <><i class="fa-solid fa-spinner-third animate-spin mr-2"></i> Loading</> :
+          "Create group"
+          }
         </button>
       </div>
     </>
