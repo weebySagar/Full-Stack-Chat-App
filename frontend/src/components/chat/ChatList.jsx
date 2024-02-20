@@ -1,26 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import ChatHeader from './ChatHeader'
 import ChatSearch from './ChatSearch'
 import ChatItem from '@components/ui/ChatItem';
+import useFetch from '@hooks/useFetch';
+import { getGroups } from '../../services/groupServices';
 
 export default function ChatList() {
+  const {data,fetchData,loading} = useFetch()
+
+  useEffect(()=>{
+     fetchData(getGroups);
+  },[])
   return (
-    <div className='chat-list relative bg-neutral-300 '>
+    <div className='chat-list relative bg-neutral-300  h-full'>
         <ChatHeader/>
         <ChatSearch/>
         <div className="list">
-        <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
-                <ChatItem name={'Group Name'} lastMsg={'This was the last message'} msgs={'30'} lastSeen={'10:30 AM'}/>
+          {
+          !loading &&
+          data?.map(chat=><ChatItem {...chat} key={chat.id} chatData={chat}/>)}
+        
         </div>
     </div>
   )

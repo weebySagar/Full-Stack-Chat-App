@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React from "react";
 
 import Input from "@components/ui/Input";
 import Badge from "@components/ui/Badge";
@@ -6,6 +6,7 @@ import UserList from "./UserList";
 import useGroupForm from "@hooks/useGroupForm";
 import { createGroup } from "../../services/groupServices";
 import useFetch from "@hooks/useFetch";
+import SearchUsers from "@components/SearchUsers";
 
 export default function GroupForm({ closeModal }) {
   const {
@@ -25,11 +26,16 @@ export default function GroupForm({ closeModal }) {
   const {loading,fetchData} = useFetch()
 
   const handleSubmit=async()=>{
-    const users = selectedUsers.map(user=>user.id);
-    fetchData(createGroup,groupName,users).then(()=>{
-      handleReset();
-      closeModal()
-    })
+    const users = selectedUsers?.map(user=>user.id);
+    const adminId= JSON.parse(localStorage.getItem('chathub-user')).id;
+    console.log(users.length);
+    if(users.length!= 0 && groupName){
+
+      fetchData(createGroup,groupName,users,adminId).then(()=>{
+        handleReset();
+        closeModal()
+      })
+    }
     
   }
 
@@ -49,7 +55,7 @@ export default function GroupForm({ closeModal }) {
         />
       </div>
 
-      <div className="mt-3">
+      {/* <div className="mt-3">
         <p>Add Users</p>
         <Input
           type={"text"}
@@ -101,7 +107,8 @@ export default function GroupForm({ closeModal }) {
           "Create group"
           }
         </button>
-      </div>
+      </div> */}
+      <SearchUsers handleSubmit={handleSubmit} loading={loading} handleSelectedUser={handleSelectedUser} searchedUser={searchedUser} selectedUsers={selectedUsers} selectedUsersSet={selectedUsersSet} inputRef={inputRef} handleRemoveSelectedUser={handleRemoveSelectedUser} optimisedChange={optimisedChange}/>
     </>
   );
 }

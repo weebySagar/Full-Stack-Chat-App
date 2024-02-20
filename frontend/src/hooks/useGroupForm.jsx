@@ -1,28 +1,26 @@
 import React, { useCallback, useRef, useState } from "react";
 
-
 import { getSearchUser } from "../services/apiServices";
-import {createGroup} from "../services/groupServices"
+import { createGroup } from "../services/groupServices";
 
-
-export default function useGroupForm() {
+export default function useGroupForm(existingUsers) {
   const [groupName, setGroupName] = useState("");
   const [searchedUser, setSearchedUser] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [selectedUsersSet, setSelectedUsersSet] = useState(new Set());
+  const [selectedUsersSet, setSelectedUsersSet] = useState(
+    new Set(existingUsers?.map((user) => user.email) || [])
+  );
 
   const inputRef = useRef(null);
 
-
   const handleChange = async (e) => {
-    const { value,name } = e.target;
-
-    if(name === 'groupName'){
-        return setGroupName(value);
+    const { value, name } = e.target;
+    if (name === "groupName") {
+      return setGroupName(value);
     }
     if (value.trim()) {
-      const users = await getSearchUser(value);
-      setSearchedUser(users);
+        const users = await getSearchUser(value);
+        setSearchedUser(users.filter(user=> !selectedUsersSet.has(user.email)));
     }
   };
 
@@ -47,7 +45,7 @@ export default function useGroupForm() {
     setSelectedUsersSet(new Set([...selectedUsersSet, user.email]));
     inputRef.current.value = "";
     setSearchedUser([]);
-    inputRef.current.focus()
+    inputRef.current.focus();
   };
 
   const handleRemoveSelectedUser = (user) => {

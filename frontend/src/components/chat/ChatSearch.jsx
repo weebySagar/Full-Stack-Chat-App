@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 
 import MyModal from "@components/ui/Modal";
+import GroupForm from "./GroupForm";
 export default function ChatSearch() {
-  let [isOpen, setIsOpen] = useState(false)
+  let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
-    setIsOpen(false)
+    setIsOpen(false);
   }
 
   function openModal() {
-    setIsOpen(true)
+    setIsOpen(true);
   }
   return (
     <>
@@ -32,7 +33,14 @@ export default function ChatSearch() {
           </button>
         </div>
       </div>
-      <MyModal isOpen={isOpen} setIsOpen={setIsOpen} closeModal={closeModal} openModal={openModal}/>
+      <MyModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        closeModal={closeModal}
+        openModal={openModal}
+      >
+        <GroupForm closeModal={closeModal} />
+      </MyModal>
     </>
   );
 }

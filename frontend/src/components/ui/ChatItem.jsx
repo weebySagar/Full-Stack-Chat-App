@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import CircleAvatar from "./CircleAvatar";
+import ChatContext from "../../context/ChatContext";
 
-export default function ChatItem({img,name,lastMsg,lastSeen,msgs}) {
+export default function ChatItem({id,img,name,lastMsg,lastSeen,msgs,chatData}) {
+  const {setSelectedChat,selectedChat} = useContext(ChatContext);
+
+  const handleClick = ()=>{
+    setSelectedChat(chatData);
+  }
   return (
-    <div className="chat-item h-20 flex p-3 items-center border-b-[1px] border-neutral-400/40 cursor-pointer hover:bg-neutral-400/80">
+    <div className="chat-item h-20 flex p-3 items-center border-b-[1px] border-neutral-400/40 cursor-pointer hover:bg-neutral-400/80" onClick={handleClick}>
       <CircleAvatar
         className={"h-9 w-9 bg-teal-800"}
         img={

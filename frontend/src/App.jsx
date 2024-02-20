@@ -12,6 +12,7 @@ import "./styles/index.css";
 import Header from "@components/Header";
 import { Toaster } from "react-hot-toast";
 import ChatPage from "@pages/ChatPage";
+import { ChatProvider } from "./context/ChatContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -29,7 +30,7 @@ function App() {
     },
     {
       path: "/chat",
-      element: <ChatPage />,
+      element: <ChatProvider><ChatPage /></ChatProvider>,
     },
   ]);
 

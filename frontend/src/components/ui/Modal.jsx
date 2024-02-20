@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import GroupForm from "@components/chat/GroupForm";
 
-export default function MyModal({ isOpen, closeModal }) {
+export default function MyModal({className, isOpen, closeModal ,children}) {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -31,8 +31,9 @@ export default function MyModal({ isOpen, closeModal }) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <GroupForm closeModal={closeModal} />
+                <Dialog.Panel className={`w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative ${className}`}>
+                 
+                  {children}
                 </Dialog.Panel>
               </Transition.Child>
             </div>

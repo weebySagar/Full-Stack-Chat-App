@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 
 import CircleAvatar from "@components/ui/CircleAvatar";
-import ChatSearch from "./ChatSearch";
+import MyModal from "@components/ui/Modal";
+import ChatGroupDetails from "./ChatGroupDetails";
 
-export default function ChatHeader() {
+export default function ChatHeader({chatData}) {
+  const [isModalOpen,setIsModalOpen] = useState(false)
+
+  const handleOpenModal = ()=>{
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = ()=>{
+    setIsModalOpen(false)
+  }
   return (
+    <>
     <div className="header sticky top-0 w-full z-50">
-      <div className="profile-header py-2 px-3 bg-teal-700">
+      <div className="profile-header py-2 px-3 bg-teal-700 flex items-center gap-2 cursor-pointer" onClick={handleOpenModal}>
         <CircleAvatar
           className={"h-12 w-12 bg-teal-950"}
           img={
             "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/7f7fb319428103.562da3a4c90fd.png"
           }
         />
+        <h1 className="text-neutral-200 text-lg">{chatData?.name}</h1>
       </div>
     </div>
+    <MyModal closeModal={handleCloseModal} isOpen={isModalOpen} className={'h-96'}>
+          <ChatGroupDetails chatData={chatData}/>
+      </MyModal>
+    </>
   );
 }

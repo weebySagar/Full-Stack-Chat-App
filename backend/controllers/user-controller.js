@@ -12,7 +12,6 @@ exports.addUser=async(req,res)=>{
     try {
         const hashedPassword =await bcrypt.hash(password,10)
        const response = await User.create({name,email,password:hashedPassword,phone},{transaction:t});
-
        if(response){
             await t.commit()
             res.status(201).json(response)
@@ -31,11 +30,11 @@ exports.loginUser = async(req,res)=>{
     const {email,password} = req.body;
     try {
         const user = await User.findOne({where:{email}});
-        
         if(user){
             bcrypt.compare(password,user.dataValues.password,(err,result)=>{
                 if(result){
                     const token = generateToken(user.dataValues.id)
+                    delete user.dataValues.password;
                     res.status(200).json({message:'User login successfully',token:token,user:user})
                 }
                 else{

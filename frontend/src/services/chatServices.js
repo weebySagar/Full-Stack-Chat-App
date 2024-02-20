@@ -7,7 +7,8 @@ export const sendMessage =async (msg) =>{
     try {
         const response = await axios.post(BASE_URL+'/message',{msg},{
             headers:{
-                'Authorization' :localStorage.getItem('chat-token')
+                'Authorization' : localStorage.getItem('chathub-token')
+
             }
         });
         return response.status;
@@ -20,7 +21,8 @@ export const getMessage =async (lastMsgId) =>{
     try {
         const {data} = await axios.get(BASE_URL+'/message?lastMsgId='+lastMsgId,{
             headers:{
-                'Authorization' :localStorage.getItem('chat-token')
+                'Authorization' :localStorage.getItem('chathub-token')
+
             }
         });
         return data;
