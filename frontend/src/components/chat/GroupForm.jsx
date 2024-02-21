@@ -41,9 +41,9 @@ export default function GroupForm({ closeModal }) {
 
   return (
     <>
-      <h3 className="text-lg font-medium leading-6 text-gray-900">
+      {/* <h3 className="text-lg font-medium leading-6 text-gray-900">
         Create Group
-      </h3>
+      </h3> */}
       <div className="mt-2">
         <Input
           placeholder={"Enter group name"}

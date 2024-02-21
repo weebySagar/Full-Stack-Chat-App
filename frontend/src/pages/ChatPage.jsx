@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import ChatWindow from "@components/chat/ChatWindow";
 import ChatList from "@components/chat/ChatList";
+import ChatContext from "../context/ChatContext";
+import ChatWindowPlaceholder from "@components/ChatWindowPlaceholder";
 
 
 
 export default function ChatPage() {
+  const { selectedChat} = useContext(ChatContext)
   return (
     <section className="chat-page h-screen overflow-hidden">
       <div className="container mx-auto w-full h-full">
@@ -16,7 +19,11 @@ export default function ChatPage() {
           </div>
           {/* chats section */}
           <div className="col-span-8" >
-            <ChatWindow/>
+            {
+              selectedChat ?
+              <ChatWindow/>
+              :<ChatWindowPlaceholder/>
+            }
           
           </div>
           

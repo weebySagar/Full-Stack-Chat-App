@@ -1,9 +1,24 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import GroupForm from "@components/chat/GroupForm";
+import TabContent from "@components/TabContent";
 
-export default function MyModal({className, isOpen, closeModal ,children}) {
+export default function MyModal({
+  withTabs = false,
+  className,
+  isOpen,
+  closeModal,
+  // firstTab,
+  // secondTab,
+  tabContentComponents,
+  children,
+}) {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabClick = (index) => {
+    setActiveTab(index);
+  };
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -31,9 +46,39 @@ export default function MyModal({className, isOpen, closeModal ,children}) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className={`w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative ${className}`}>
-                 
-                  {children}
+                <Dialog.Panel
+                  className={`w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative ${className}`}
+                >
+                  {withTabs && (
+                    <div className="tab-button flex absolute left-0 right-0 top-0 border border-b">
+                      <button
+                        onClick={() => handleTabClick(0)}
+                        className={`flex-grow   text-sm font-medium p-4 outline-none border-r focus:outline-none${
+                          activeTab === 0
+                            ? "text-gray-900 border-b-2 border-b-green-700"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        Create Group
+                      </button>
+                      <button
+                        onClick={() => handleTabClick(1)}
+                        className={`flex-grow   text-sm font-medium p-4  outline-none focus:outline-none${
+                          activeTab === 1
+                            ? "text-gray-900 border-b-2 border-green-800"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        New Chat
+                      </button>
+                    </div>
+                  )}
+                  {withTabs ?
+                  //  <TabContent tab={activeTab} firstTab={firstTab} secondTab={secondTab} /> 
+                  <div className="pt-6">
+                {  tabContentComponents[activeTab]}
+                  </div>
+                   : children}
                 </Dialog.Panel>
               </Transition.Child>
             </div>

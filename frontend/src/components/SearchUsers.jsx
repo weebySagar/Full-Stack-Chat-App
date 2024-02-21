@@ -16,6 +16,7 @@ export default function SearchUsers({
   handleRemoveSelectedUser,
   optimisedChange,
   loading,
+  startChat = false,
 }) {
   //   const {
   //     optimisedChange,
@@ -48,17 +49,18 @@ export default function SearchUsers({
         ))}
       </div>
       <div className="mt-3">
-        {searchedUser.length == 0 ? (
+        {searchedUser?.length == 0 ? (
           <p>No user found</p>
         ) : (
           <ul>
-            {searchedUser.map((user) => {
+            {searchedUser?.map((user) => {
               return (
                 !selectedUsersSet.has(user.email) && (
                   <UserList
                     user={user}
-                    handleSelectedUser={handleSelectedUser}
+                    handleSelectedUser={startChat ? handleSubmit :handleSelectedUser}
                     key={user?.id}
+                    startChat={startChat}
                   />
                 )
               );
@@ -66,25 +68,27 @@ export default function SearchUsers({
           </ul>
         )}
       </div>
-      <div className="mt-4">
-        <button
-          type="button"
-          className="inline-flex justify-center rounded-md border border-transparent bg-teal-600  px-4 py-2 text-sm font-medium text-white  focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <i class="fa-solid fa-spinner-third animate-spin mr-2"></i>{" "}
-              Loading
-            </>
-          ) : existingUsers ? (
-            "Add users"
-          ) : (
-            "Create group"
-          )}
-        </button>
-      </div>
+      {!startChat && (
+        <div className="mt-4">
+          <button
+            type="button"
+            className="inline-flex justify-center rounded-md border border-transparent bg-teal-600  px-4 py-2 text-sm font-medium text-white  focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <i class="fa-solid fa-spinner-third animate-spin mr-2"></i>{" "}
+                Loading
+              </>
+            ) : existingUsers ? (
+              "Add users"
+            ) : (
+              "Create group"
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

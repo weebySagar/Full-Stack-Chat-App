@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 import MyModal from "@components/ui/Modal";
 import GroupForm from "./GroupForm";
+import SearchUsers from "@components/SearchUsers";
+import NewChat from "./NewChat";
 export default function ChatSearch() {
   let [isOpen, setIsOpen] = useState(false);
 
@@ -38,8 +40,11 @@ export default function ChatSearch() {
         setIsOpen={setIsOpen}
         closeModal={closeModal}
         openModal={openModal}
+        withTabs={true}
+        firstTab={<GroupForm closeModal={closeModal} />}
+        tabContentComponents={[<GroupForm closeModal={closeModal}/>,<NewChat/>]}
       >
-        <GroupForm closeModal={closeModal} />
+        
       </MyModal>
     </>
   );

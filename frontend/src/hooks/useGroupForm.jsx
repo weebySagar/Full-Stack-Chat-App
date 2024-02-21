@@ -3,10 +3,11 @@ import React, { useCallback, useRef, useState } from "react";
 import { getSearchUser } from "../services/apiServices";
 import { createGroup } from "../services/groupServices";
 
-export default function useGroupForm(existingUsers) {
+export default function useGroupForm(existingUsers,newChat) {
   const [groupName, setGroupName] = useState("");
   const [searchedUser, setSearchedUser] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedUser ,setSelectedUser] = useState();
   const [selectedUsersSet, setSelectedUsersSet] = useState(
     new Set(existingUsers?.map((user) => user.email) || [])
   );
@@ -41,11 +42,17 @@ export default function useGroupForm(existingUsers) {
   const optimisedChange = useCallback(debounce(handleChange, 500), []);
 
   const handleSelectedUser = (user) => {
-    setSelectedUsers((prev) => [...prev, user]);
-    setSelectedUsersSet(new Set([...selectedUsersSet, user.email]));
-    inputRef.current.value = "";
-    setSearchedUser([]);
-    inputRef.current.focus();
+    if(newChat){
+      setSelectedUser(user)
+    }
+    else{
+
+      setSelectedUsers((prev) => [...prev, user]);
+      setSelectedUsersSet(new Set([...selectedUsersSet, user.email]));
+      inputRef.current.value = "";
+      setSearchedUser([]);
+      inputRef.current.focus();
+    }
   };
 
   const handleRemoveSelectedUser = (user) => {
@@ -78,6 +85,7 @@ export default function useGroupForm(existingUsers) {
     handleReset,
     handleChange,
     inputRef,
+    selectedUser
     // handleSubmit
   };
 }
