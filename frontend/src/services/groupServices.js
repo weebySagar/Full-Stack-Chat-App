@@ -3,15 +3,15 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:3000/api';
 const token = localStorage.getItem('chathub-token')
 
-export const createGroup = async (groupName, userId, adminId) => {
+export const createGroup = async (chatName, userId) => {
     try {
-        const response = await axios.post(BASE_URL + '/group/create-group', { groupName, userId, adminId }, {
+        const {data} = await axios.post(BASE_URL + '/group/create-group', { chatName, userId: JSON.stringify(userId) }, {
             headers: {
                 'Authorization': token
 
             }
         });
-        return response.status;
+        return data;
     } catch (error) {
         throw error.response.data;
     }

@@ -6,8 +6,8 @@ const useFetch = () => {
   const [error, setError] = useState(null);
 
     const fetchData = async (apiFunction,...args) => {
+      setLoading(true)
       try {
-        setLoading(true);
         const result = await apiFunction(...args);
         setData(result);
       } catch (error) {

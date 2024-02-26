@@ -7,22 +7,27 @@ import PopupMenu from "@components/ui/PopupMenu";
 import SearchUsers from "@components/SearchUsers";
 import UsersGroupList from "./UsersGroupList";
 import AddUserToGroup from "./AddUserToGroup";
+import { useChat } from "../../context/ChatContext";
+import { useAuth } from "../../context/UserContext";
 
 export default function ChatGroupDetails({ chatData }) {
   const { data, loading, fetchData } = useFetch();
   const [isAdmin, setIsAdmin] = useState(false);
-  const currentUser = JSON.parse(localStorage.getItem("chathub-user"));
+  
+  const {selectedChat}=useChat();
+  const {user:currentUser} = useAuth()
+  // console.log(selectedChat);
+
+  // useEffect(() => {
+  //   fetchData(getGroupUsers, chatData.id);
+  // }, [chatData.id]);
 
   useEffect(() => {
-    fetchData(getGroupUsers, chatData.id);
-  }, [chatData.id]);
+    if (!selectedChat || !currentUser.user) return;
 
-  useEffect(() => {
-    if (!data || !currentUser) return;
-
-    const user = data.find((user) => user.id == currentUser.id);
+    const user = selectedChat.users.find((user) => user.id == currentUser.user.id);
     setIsAdmin(user && user.isAdmin);
-  }, [data, currentUser]);
+  }, [ currentUser]);
 
   return (
     <div className="group-details h-full overflow-y-scroll pt-6">
@@ -30,10 +35,10 @@ export default function ChatGroupDetails({ chatData }) {
         <Loading />
       ) : (
         <>
-          <AddUserToGroup existingUsers={data} chatData={chatData}/>
+          <AddUserToGroup existingUsers={selectedChat.users} chatData={chatData}/>
           <UsersGroupList
             chatData={chatData}
-            data={data}
+            data={selectedChat.users}
             isAdmin={isAdmin}
             currentUser={currentUser}
           />

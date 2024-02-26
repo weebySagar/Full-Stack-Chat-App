@@ -1,5 +1,8 @@
 // const {col} = require('sequelize')
 
+const Chat = require("../models/chat-model");
+const User = require("../models/user-model");
+
 // const sequelize = require('../db/database');
 // const GroupMembership = require('../models/group-membership');
 // const Group = require('../models/group-model');
@@ -215,3 +218,31 @@
 //         res.status(500).send('Internal server error')
 //     }
 // }
+
+exports.createGroupChat = async (req,res) =>{
+    const {chatName, userId} = req.body;
+    console.log(userId);
+  try {
+    if(!chatName || !userId){
+      return res.status(400).send('Enter all fields');
+    }
+  
+    const allUsers = JSON.parse(userId);
+  
+    allUsers.push(req.user.id)
+  
+    const groupChat = await Chat.create({
+      chatName,
+      users:allUsers,
+      isGroup:true,
+      groupAdminId:req.user.id,
+    })
+  
+    const users = await User.findAll({where:{id:groupChat.users}});
+    groupChat.users = users
+    res.status(200).send(groupChat)
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal server error')
+  }
+  }

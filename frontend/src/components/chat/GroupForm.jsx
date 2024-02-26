@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Input from "@components/ui/Input";
 import Badge from "@components/ui/Badge";
@@ -7,6 +7,8 @@ import useGroupForm from "@hooks/useGroupForm";
 import { createGroup } from "../../services/groupServices";
 import useFetch from "@hooks/useFetch";
 import SearchUsers from "@components/SearchUsers";
+import { useChat } from "../../context/ChatContext";
+import toast from "react-hot-toast";
 
 export default function GroupForm({ closeModal }) {
   const {
@@ -23,21 +25,23 @@ export default function GroupForm({ closeModal }) {
     // handleSubmit
   } = useGroupForm();
 
-  const {loading,fetchData} = useFetch()
+  const { setChats,setSelectedChat } = useChat();
 
-  const handleSubmit=async()=>{
-    const users = selectedUsers?.map(user=>user.id);
-    const adminId= JSON.parse(localStorage.getItem('chathub-user')).id;
-    console.log(users.length);
-    if(users.length!= 0 && groupName){
 
-      fetchData(createGroup,groupName,users,adminId).then(()=>{
+  const handleSubmit = async () => {
+    const users = selectedUsers?.map((user) => user.id);
+    if (users.length >= 2 && groupName) {
+      try {
+        const data = await createGroup(groupName, users);
+        setChats((chat) => [data,...chat ]);
+        setSelectedChat(data)
         handleReset();
-        closeModal()
-      })
+        closeModal();
+      } catch (error) {
+        toast.error(error)
+      }
     }
-    
-  }
+  };
 
   return (
     <>
@@ -108,7 +112,17 @@ export default function GroupForm({ closeModal }) {
           }
         </button>
       </div> */}
-      <SearchUsers handleSubmit={handleSubmit} loading={loading} handleSelectedUser={handleSelectedUser} searchedUser={searchedUser} selectedUsers={selectedUsers} selectedUsersSet={selectedUsersSet} inputRef={inputRef} handleRemoveSelectedUser={handleRemoveSelectedUser} optimisedChange={optimisedChange}/>
+      <SearchUsers
+        handleSubmit={handleSubmit}
+        loading={loading}
+        handleSelectedUser={handleSelectedUser}
+        searchedUser={searchedUser}
+        selectedUsers={selectedUsers}
+        selectedUsersSet={selectedUsersSet}
+        inputRef={inputRef}
+        handleRemoveSelectedUser={handleRemoveSelectedUser}
+        optimisedChange={optimisedChange}
+      />
     </>
   );
 }
