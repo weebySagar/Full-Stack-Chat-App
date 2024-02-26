@@ -10,7 +10,7 @@ export default function UserList({user,handleSelectedUser,startChat}) {
     onClick={() => handleSelectedUser(user)}
   >
     
-        <div className={`w-16 flex items-center justify-center rounded-l-md text-white uppercase bg-pink-600 flex-shrink-0 h-14 font-medium ${pickRandomColor()}`}>
+        <div className={`w-16 flex items-center justify-center rounded-l-md text-white uppercase flex-shrink-0 h-14 font-medium ${pickRandomColor()}`}>
             {user.name.charAt(0)}
         </div>
     <div className='bg-white border-gray-200 border-y border-r flex flex-grow rounded-r-md items-center'>

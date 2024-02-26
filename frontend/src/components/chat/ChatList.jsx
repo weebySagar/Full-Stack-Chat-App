@@ -5,13 +5,23 @@ import ChatSearch from './ChatSearch'
 import ChatItem from '@components/ui/ChatItem';
 import useFetch from '@hooks/useFetch';
 import { getGroups } from '../../services/groupServices';
+import { getAllChats } from '../../services/chatServices';
+import { useChat } from '../../context/ChatContext';
 
 export default function ChatList() {
   const {data,fetchData,loading} = useFetch()
+  const {chats,setChats} = useChat()
+  useEffect(()=>{
+    fetchData(getAllChats)
+  },[])
 
   useEffect(()=>{
-     fetchData(getGroups);
-  },[])
+    if (data) {
+   
+      setChats([...chats, ...data]); // Update chats state by 
+    }
+  },[data])
+
   return (
     <div className='chat-list relative bg-neutral-300  h-full'>
         <ChatHeader/>
@@ -19,7 +29,7 @@ export default function ChatList() {
         <div className="list">
           {
           !loading &&
-          data?.map(chat=><ChatItem {...chat} key={chat.id} chatData={chat}/>)}
+          chats?.map(chat=><ChatItem {...chat} key={chat?.id} chatData={chat}/>)}
         
         </div>
     </div>

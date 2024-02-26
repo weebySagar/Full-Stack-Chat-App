@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import toast from 'react-hot-toast';
 import { sendMessage } from '../../services/chatServices';
+import ChatContext from '../../context/ChatContext';
 
 export default function ChatInput() {
   const [message,setMessage] = useState("");
+  const {selectedChat} = useContext(ChatContext)
+
+  // console.log(selectedChat);
 
   const handleChange = (e) =>{
     setMessage(e.target.value);
@@ -13,7 +17,9 @@ export default function ChatInput() {
     e.preventDefault();
 
     if(message.trim()){
-      const status = await sendMessage(message);
+      const groupId = selectedChat?.admin ? selectedChat.id : null
+      console.log(selectedChat.id);
+      const status = await sendMessage(message,groupId,selectedChat.id);
 
       if(status !== 201){
         return toast.error('cannot send message')

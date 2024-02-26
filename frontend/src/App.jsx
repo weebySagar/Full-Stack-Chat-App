@@ -13,6 +13,7 @@ import Header from "@components/Header";
 import { Toaster } from "react-hot-toast";
 import ChatPage from "@pages/ChatPage";
 import { ChatProvider } from "./context/ChatContext";
+import { UserProvider } from "./context/UserContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -35,10 +36,10 @@ function App() {
   ]);
 
   return (
-    <>
+    <UserProvider>
       <RouterProvider router={router} />
       <Toaster />
-    </>
+      </UserProvider>
   );
 }
 

@@ -3,10 +3,10 @@ import React, { useContext, useState } from "react";
 import CircleAvatar from "@components/ui/CircleAvatar";
 import MyModal from "@components/ui/Modal";
 import ChatGroupDetails from "./ChatGroupDetails";
+import { getUser } from "../../utils/helper";
 
 export default function ChatHeader({chatData}) {
   const [isModalOpen,setIsModalOpen] = useState(false)
-
   const handleOpenModal = ()=>{
     setIsModalOpen(true)
   }
@@ -24,7 +24,7 @@ export default function ChatHeader({chatData}) {
             "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/7f7fb319428103.562da3a4c90fd.png"
           }
         />
-        <h1 className="text-neutral-200 text-lg">{chatData?.name}</h1>
+        <h1 className="text-neutral-200 text-lg">{chatData?.isGroup ? chatData.chatName : getUser(chatData?.users)}</h1>
       </div>
     </div>
     <MyModal closeModal={handleCloseModal} isOpen={isModalOpen} className={'h-96'}>

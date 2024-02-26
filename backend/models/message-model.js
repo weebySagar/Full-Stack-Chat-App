@@ -23,13 +23,22 @@ const Message = db.define('message',{
         type:Sequelize.DATE,
         defaultValue:Sequelize.NOW,
         allowNull: false
+    },
+    isGroup:{
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue:false
     }
 });
 
 User.hasMany(Message);
 Message.belongsTo(User)
 
-Group.hasMany(Message);
-Message.belongsTo(Group)
+// Group.hasMany(Message);
+// Message.belongsTo(Group);
+
+User.hasMany(Message,{as:'sender',foreignKey:'senderId'});
+Message.belongsTo(User,{as:'receiver',foreignKey:'receiverId'});
+
 
 module.exports = Message

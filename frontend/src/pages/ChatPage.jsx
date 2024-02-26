@@ -9,6 +9,7 @@ import ChatWindowPlaceholder from "@components/ChatWindowPlaceholder";
 
 export default function ChatPage() {
   const { selectedChat} = useContext(ChatContext)
+  console.log(selectedChat);
   return (
     <section className="chat-page h-screen overflow-hidden">
       <div className="container mx-auto w-full h-full">
@@ -20,9 +21,9 @@ export default function ChatPage() {
           {/* chats section */}
           <div className="col-span-8" >
             {
-              selectedChat ?
+              selectedChat === null ?
+              <ChatWindowPlaceholder/>:
               <ChatWindow/>
-              :<ChatWindowPlaceholder/>
             }
           
           </div>

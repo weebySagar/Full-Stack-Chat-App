@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors')
 
 const db = require('./db/database');
+const Chat = require('./models/chat-model')
 
 const userRoutes = require('./routes/user-route');
 const messageRoutes = require('./routes/message-route');

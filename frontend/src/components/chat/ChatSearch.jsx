@@ -42,7 +42,7 @@ export default function ChatSearch() {
         openModal={openModal}
         withTabs={true}
         firstTab={<GroupForm closeModal={closeModal} />}
-        tabContentComponents={[<GroupForm closeModal={closeModal}/>,<NewChat/>]}
+        tabContentComponents={[<GroupForm closeModal={closeModal}/>,<NewChat closeModal={closeModal}/>]}
       >
         
       </MyModal>
