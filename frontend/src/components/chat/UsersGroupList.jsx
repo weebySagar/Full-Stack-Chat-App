@@ -46,7 +46,7 @@ export default function UsersGroupList({ chatData,data,isAdmin ,currentUser}) {
               )} */}
               </div>
               <div>
-                {isAdmin && !data.isGroupAdmin ? (
+                { isAdmin  ? (
                   <PopupMenu groupId={chatData.id} userId={user.id} />
                 ) : (
                   ""

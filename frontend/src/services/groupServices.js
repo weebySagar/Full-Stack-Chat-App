@@ -65,7 +65,7 @@ export const removeUserFromGroup = async (groupId, userId) => {
 
 export const makeUserAdmin = async (groupId, userId) => {
     try {
-        const {data} = axios.post(`${BASE_URL}/group/${groupId}/user/${userId}/promote`,{
+        const {data} = axios.post(`${BASE_URL}/group/${groupId}/user/${userId}`,{
             headers:{
                 'Authorization':token
             }

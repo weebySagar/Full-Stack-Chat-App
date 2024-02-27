@@ -148,92 +148,88 @@ const sequelize = require('../db/database');
 // }
 
 
-// exports.makeUserAdmin = async (req, res) => {
-//     try {
-//         const { groupId, userId } = req.params;
-//         const adminId = req.user.id;
+exports.makeUserAdmin = async (req, res) => {
+  try {
+    const { groupId, userId } = req.params;
+    const adminId = req.user.id;
 
-//         const isAdmin = await GroupMembership.findOne({
-//             where: {
-//                 userId: adminId, groupId, isAdmin: true
-//             }
-//         })
+    const chat = await Chat.findOne({
+      where: {
+        id: groupId,
+        groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
+      }
+    })
 
-//         if (!isAdmin) {
-//             return res.status(403).send('Unauthorized: only group admins can make admin')
-//         }
-
-//         const response = await GroupMembership.update({ isAdmin: true }, {
-//             where: {
-//                 groupId, userId
-//             }
-//         })
-
-//         if(response){
-
-//             res.status(200).send('User promoted to admin')
-//         }
-
-
-//     } catch (error) {
-//         res.status(500).send('Internal server error')
-//     }
-// }
-
-exports.addUserToGroup = async(req,res) =>{
-  const t = await sequelize.transaction()
-    try {
-        const adminId = req.user.id;
-        const {userId , groupId }= req.body;
-
-        const chat = await Chat.findOne({
-          where:{
-            id:groupId,
-            groupAdminId:sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
-          }
-        })
-
-        if(!chat){
-              res.status(403).send('Unauthorized: only group admins can add user')
-        }
-
-
-        chat.users = [...new Set([...chat.users,...userId])];
-        const response = await chat.save()
-
-        if (response) {
-            await t.commit()
-            res.status(201).send(response)
-        }
-    } catch (error) {
-        await t.rollback()
-        res.status(500).send('Internal server error')
+    if (!chat) {
+      return res.status(403).send('Unauthorized: only group admins can promote user')
     }
+
+    chat.groupAdminId = [...new Set([...chat.groupAdminId, +userId])];
+    const response = await chat.save()
+
+
+    if (response) {
+      res.status(201).send(response)
+    }
+  } catch (error) {
+    res.status(500).send('Internal server error')
+  }
 }
 
-exports.createGroupChat = async (req,res) =>{
-    const {chatName, userId} = req.body;
+exports.addUserToGroup = async (req, res) => {
+  const t = await sequelize.transaction()
+  try {
+    const adminId = req.user.id;
+    const { userId, groupId } = req.body;
 
-    try {
-    if(!chatName || !userId){
+    const chat = await Chat.findOne({
+      where: {
+        id: groupId,
+        groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
+      }
+    })
+
+    if (!chat) {
+      return res.status(403).send('Unauthorized: only group admins can add user')
+    }
+
+
+    chat.users = [...new Set([...chat.users, ...userId])];
+    const response = await chat.save()
+
+    if (response) {
+      await t.commit()
+      res.status(201).send(response)
+    }
+  } catch (error) {
+    await t.rollback()
+    res.status(500).send('Internal server error')
+  }
+}
+
+exports.createGroupChat = async (req, res) => {
+  const { chatName, userId } = req.body;
+
+  try {
+    if (!chatName || !userId) {
       return res.status(400).send('Enter all fields');
     }
-  
+
     const allUsers = JSON.parse(userId);
-  
+
     allUsers.push(req.user.id)
-  
+
     const groupChat = await Chat.create({
       chatName,
-      users:allUsers,
-      isGroup:true,
-      groupAdminId:[req.user.id],
+      users: allUsers,
+      isGroup: true,
+      groupAdminId: [req.user.id],
     })
-  
-    const users = await User.findAll({where:{id:groupChat.users}});
+
+    const users = await User.findAll({ where: { id: groupChat.users } });
     groupChat.users = users
     res.status(200).send(groupChat)
   } catch (error) {
     res.status(500).send('Internal server error')
   }
-  }
+}

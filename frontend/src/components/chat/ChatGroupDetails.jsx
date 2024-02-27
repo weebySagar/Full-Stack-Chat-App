@@ -16,7 +16,6 @@ export default function ChatGroupDetails({ chatData }) {
   
   const {selectedChat}=useChat();
   const {user:currentUser} = useAuth()
-  // console.log(selectedChat);
 
   // useEffect(() => {
   //   fetchData(getGroupUsers, chatData.id);
@@ -26,8 +25,9 @@ export default function ChatGroupDetails({ chatData }) {
     if (!selectedChat || !currentUser.user) return;
 
     const user = selectedChat.users.find((user) => user.id == currentUser.user.id);
-    setIsAdmin(user && user.isAdmin);
-  }, [ currentUser]);
+    const isAdmin = selectedChat.groupAdminId.includes(currentUser.user.id);
+    setIsAdmin(user && isAdmin);
+  }, [ selectedChat]);
 
   return (
     <div className="group-details h-full overflow-y-scroll pt-6">
@@ -40,7 +40,7 @@ export default function ChatGroupDetails({ chatData }) {
             chatData={chatData}
             data={selectedChat.users}
             isAdmin={isAdmin}
-            currentUser={currentUser}
+            currentUser={currentUser.user}
           />
           {/* <div className="header bg-teal-800 text-white absolute top-0 left-0 right-0 px-6 py-3">
             <p>Group Members</p>
