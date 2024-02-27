@@ -3,7 +3,7 @@
 const Chat = require("../models/chat-model");
 const User = require("../models/user-model");
 
-// const sequelize = require('../db/database');
+const sequelize = require('../db/database');
 // const GroupMembership = require('../models/group-membership');
 // const Group = require('../models/group-model');
 // const User = require('../models/user-model');
@@ -180,49 +180,41 @@ const User = require("../models/user-model");
 //     }
 // }
 
-// exports.addUserToGroup = async(req,res) =>{
-//     try {
-//         const adminId = req.user.id;
-//         const {userId , groupId }= req.body;
-//         const t = await sequelize.transaction()
+exports.addUserToGroup = async(req,res) =>{
+  const t = await sequelize.transaction()
+    try {
+        const adminId = req.user.id;
+        const {userId , groupId }= req.body;
+
+        const chat = await Chat.findOne({
+          where:{
+            id:groupId,
+            groupAdminId:sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
+          }
+        })
+
+        if(!chat){
+              res.status(403).send('Unauthorized: only group admins can add user')
+        }
 
 
-//         const isAdmin = await GroupMembership.findOne({where:{
-//             userId:adminId,groupId,isAdmin:true
-//         }})
+        chat.users = [...new Set([...chat.users,...userId])];
+        const response = await chat.save()
 
-//         if(!isAdmin){
-//             res.status(403).send('Unauthorized: only group admins can add user')
-//         }
-
-//         const users = await User.findAll({
-//             where: {
-//                 id: userId
-//             }
-//         })
-
-//         const groupMembership = users.map(user => ({
-//             groupId:groupId,
-//             userId: user.id
-//         }))
-
-
-//         const response = await GroupMembership.bulkCreate(groupMembership, { transaction: t })
-
-//         if (response) {
-//             await t.commit()
-//             res.status(201).send('Group created successfully')
-//         }
-//     } catch (error) {
-//         await t.rollback()
-//         res.status(500).send('Internal server error')
-//     }
-// }
+        if (response) {
+            await t.commit()
+            res.status(201).send(response)
+        }
+    } catch (error) {
+        await t.rollback()
+        res.status(500).send('Internal server error')
+    }
+}
 
 exports.createGroupChat = async (req,res) =>{
     const {chatName, userId} = req.body;
-    console.log(userId);
-  try {
+
+    try {
     if(!chatName || !userId){
       return res.status(400).send('Enter all fields');
     }
@@ -235,14 +227,13 @@ exports.createGroupChat = async (req,res) =>{
       chatName,
       users:allUsers,
       isGroup:true,
-      groupAdminId:req.user.id,
+      groupAdminId:[req.user.id],
     })
   
     const users = await User.findAll({where:{id:groupChat.users}});
     groupChat.users = users
     res.status(200).send(groupChat)
   } catch (error) {
-    console.log(error);
     res.status(500).send('Internal server error')
   }
   }
