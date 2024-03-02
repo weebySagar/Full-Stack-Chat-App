@@ -11,7 +11,7 @@ export const getUser = (users) => {
     const { user } = useAuth();
     if(users){
 
-        return users[0]?.id === user.user?.id ? users[1]?.name : users[0]?.name;
+        return users[0]?.id === user.user?.id ? users[1] : users[0];
     }else{
         return user.user.name
     }

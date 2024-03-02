@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { getGroupUsers } from "../../services/groupServices";
 import PopupMenu from "@components/ui/PopupMenu";
 import Loading from "@components/ui/Loading";
+import Badge from "@components/ui/Badge";
 
 export default function UsersGroupList({ chatData,data,isAdmin ,currentUser,closeModal}) {
 
-  console.log(chatData);
   
   return (
     <>
@@ -51,7 +51,7 @@ export default function UsersGroupList({ chatData,data,isAdmin ,currentUser,clos
                 { isAdmin && !chatData.groupAdminId.includes(user.id)  ? (
                   <PopupMenu groupId={chatData.id} userId={user.id} closeModal={closeModal} />
                 ) : (
-                  ""
+                  <Badge name={"Admin"} showClose={false} className={"text-xs"}/>
                 )}
               </div>
             </li>

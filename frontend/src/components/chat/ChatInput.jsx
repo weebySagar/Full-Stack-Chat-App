@@ -7,7 +7,6 @@ export default function ChatInput() {
   const [message,setMessage] = useState("");
   const {selectedChat} = useContext(ChatContext)
 
-  // console.log(selectedChat);
 
   const handleChange = (e) =>{
     setMessage(e.target.value);
@@ -18,7 +17,6 @@ export default function ChatInput() {
 
     if(message.trim()){
       const groupId = selectedChat?.admin ? selectedChat.id : null
-      console.log(selectedChat.id);
       const status = await sendMessage(message,groupId,selectedChat.id);
 
       if(status !== 201){

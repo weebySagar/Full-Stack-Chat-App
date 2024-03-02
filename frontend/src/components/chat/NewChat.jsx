@@ -29,10 +29,9 @@ export default function NewChat({ closeModal }) {
     const data = await accessChat(userId);
 
     // if(!loading){
-    // console.log(data, loading);
     if (!chats.find((c) => c.id === data.id)) 
     {
-      setChats([...chats, data]);
+      setChats([data,...chats ]);
     }
     setSelectedChat(data);
     handleReset();

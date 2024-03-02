@@ -33,7 +33,7 @@ export default function ChatItem({
         }
       />
       <div className="message flex-grow ml-3 overflow-hidden whitespace-nowrap text-ellipsis">
-        <h3 className="text-lg">{isGroup ? chatName : getUser(users)}</h3>
+        <h3 className="text-lg">{isGroup ? chatName : getUser(users).name}</h3>
         <p className="text-sm">{lastMsg}</p>
       </div>
       <div className="timestamp flex-none text-end">
