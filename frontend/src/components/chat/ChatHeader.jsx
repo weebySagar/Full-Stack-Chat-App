@@ -28,7 +28,7 @@ export default function ChatHeader({chatData}) {
       </div>
     </div>
     <MyModal closeModal={handleCloseModal} isOpen={isModalOpen} className={'h-96'}>
-          <ChatGroupDetails chatData={chatData}/>
+          <ChatGroupDetails chatData={chatData} closeModal={handleCloseModal}/>
       </MyModal>
     </>
   );

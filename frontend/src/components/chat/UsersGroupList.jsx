@@ -4,7 +4,9 @@ import { getGroupUsers } from "../../services/groupServices";
 import PopupMenu from "@components/ui/PopupMenu";
 import Loading from "@components/ui/Loading";
 
-export default function UsersGroupList({ chatData,data,isAdmin ,currentUser}) {
+export default function UsersGroupList({ chatData,data,isAdmin ,currentUser,closeModal}) {
+
+  console.log(chatData);
   
   return (
     <>
@@ -13,7 +15,7 @@ export default function UsersGroupList({ chatData,data,isAdmin ,currentUser}) {
       </div>
       
         <ul role="list" className="divide-y divide-gray-100">
-          {data.map((user) => (
+          {data?.map((user) => (
             <li key={user.email} className="flex justify-between gap-x-6 py-5 ">
               <div className="flex min-w-0 gap-x-4 items-center">
                 <img
@@ -46,8 +48,8 @@ export default function UsersGroupList({ chatData,data,isAdmin ,currentUser}) {
               )} */}
               </div>
               <div>
-                { isAdmin  ? (
-                  <PopupMenu groupId={chatData.id} userId={user.id} />
+                { isAdmin && !chatData.groupAdminId.includes(user.id)  ? (
+                  <PopupMenu groupId={chatData.id} userId={user.id} closeModal={closeModal} />
                 ) : (
                   ""
                 )}

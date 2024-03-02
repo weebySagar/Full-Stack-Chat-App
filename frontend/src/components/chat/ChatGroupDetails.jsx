@@ -10,7 +10,7 @@ import AddUserToGroup from "./AddUserToGroup";
 import { useChat } from "../../context/ChatContext";
 import { useAuth } from "../../context/UserContext";
 
-export default function ChatGroupDetails({ chatData }) {
+export default function ChatGroupDetails({ chatData,closeModal }) {
   const { data, loading, fetchData } = useFetch();
   const [isAdmin, setIsAdmin] = useState(false);
   
@@ -35,12 +35,13 @@ export default function ChatGroupDetails({ chatData }) {
         <Loading />
       ) : (
         <>
-          <AddUserToGroup existingUsers={selectedChat.users} chatData={chatData}/>
+          <AddUserToGroup existingUsers={selectedChat.users} chatData={chatData} closeModal={closeModal}/>
           <UsersGroupList
             chatData={chatData}
             data={selectedChat.users}
             isAdmin={isAdmin}
             currentUser={currentUser.user}
+            closeModal={closeModal}
           />
           {/* <div className="header bg-teal-800 text-white absolute top-0 left-0 right-0 px-6 py-3">
             <p>Group Members</p>

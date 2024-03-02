@@ -3,14 +3,11 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:3000/api';
 const token = localStorage.getItem('chathub-token')
 
+axios.defaults.headers.common['Authorization'] = token
+
 export const createGroup = async (chatName, userId) => {
     try {
-        const {data} = await axios.post(BASE_URL + '/group/create-group', { chatName, userId: JSON.stringify(userId) }, {
-            headers: {
-                'Authorization': token
-
-            }
-        });
+        const {data} = await axios.post(BASE_URL + '/group/create-group', { chatName, userId: JSON.stringify(userId) });
         return data;
     } catch (error) {
         throw error.response.data;
@@ -20,12 +17,7 @@ export const createGroup = async (chatName, userId) => {
 
 export const getGroups = async () => {
     try {
-        const { data } = await axios.get(BASE_URL + '/group/', {
-            headers: {
-                'Authorization': token
-
-            }
-        });
+        const { data } = await axios.get(BASE_URL + '/group/');
         return data;
     } catch (error) {
         throw error.response.data
@@ -35,11 +27,7 @@ export const getGroups = async () => {
 
 export const getGroupUsers = async (groupId) => {
     try {
-        const { data } = await axios.get(`${BASE_URL}/group/${groupId}`, {
-            headers: {
-                'Authorization': token
-            }
-        })
+        const { data } = await axios.get(`${BASE_URL}/group/${groupId}`)
 
         return data
     } catch (error) {
@@ -49,11 +37,7 @@ export const getGroupUsers = async (groupId) => {
 
 export const removeUserFromGroup = async (groupId, userId) => {
     try {
-        const { data } = await axios.delete(`${BASE_URL}/group/${groupId}/user/${userId}`, {
-            headers: {
-                'Authorization': token
-            }
-        })
+        const { data } = await axios.delete(`${BASE_URL}/group/${groupId}/user/${userId}`, )
 
         return data
     } catch (error) {
@@ -65,7 +49,7 @@ export const removeUserFromGroup = async (groupId, userId) => {
 
 export const makeUserAdmin = async (groupId, userId) => {
     try {
-        const {data} = axios.post(`${BASE_URL}/group/${groupId}/user/${userId}`,{
+        const {data} =await axios.post(`${BASE_URL}/group/${groupId}/user/${userId}`,{
             headers:{
                 'Authorization':token
             }
@@ -77,13 +61,14 @@ export const makeUserAdmin = async (groupId, userId) => {
     }
 }
 
-export const addUserToGroup = (groupId,userId)=>{
+export const addUserToGroup =async (groupId,userId)=>{
     try {
-        const {data} = axios.post(`${BASE_URL}/group/add-users`,{groupId,userId},{
+        const {data} = await axios.post(`${BASE_URL}/group/add-users`,{groupId,userId},{
             headers:{
                 'Authorization':token
             }
         })
+        console.log(data);
         return data
     } catch (error) {
         throw error.response.data

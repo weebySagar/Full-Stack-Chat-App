@@ -26,12 +26,13 @@ export default function GroupForm({ closeModal }) {
   } = useGroupForm();
 
   const { setChats,setSelectedChat } = useChat();
-
+  let loading = false;
 
   const handleSubmit = async () => {
     const users = selectedUsers?.map((user) => user.id);
     if (users.length >= 2 && groupName) {
       try {
+        loading= true
         const data = await createGroup(groupName, users);
         setChats((chat) => [data,...chat ]);
         setSelectedChat(data)
@@ -39,6 +40,9 @@ export default function GroupForm({ closeModal }) {
         closeModal();
       } catch (error) {
         toast.error(error)
+      }
+      finally{
+        loading=false;
       }
     }
   };

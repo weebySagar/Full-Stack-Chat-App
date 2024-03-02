@@ -4,8 +4,10 @@ import SearchUsers from "@components/SearchUsers";
 import useGroupForm from "@hooks/useGroupForm";
 import useFetch from "@hooks/useFetch";
 import { addUserToGroup } from "../../services/groupServices";
+import toast from "react-hot-toast";
+import { useChat } from "../../context/ChatContext";
 
-export default function AddUserToGroup({chatData, existingUsers }) {
+export default function AddUserToGroup({chatData, existingUsers,closeModal }) {
   const {
     selectedUsers,
     selectedUsersSet,
@@ -18,12 +20,25 @@ export default function AddUserToGroup({chatData, existingUsers }) {
     // handleSubmit
   } = useGroupForm(existingUsers);
 
-  const { data, loading,fetchData } = useFetch();
-  const handleSubmit = () => {
+  // const {  loading,fetchData } = useFetch();
+  let loading = false;
+  const {updateUserList} = useChat()
+  const handleSubmit = async() => {
     const users = selectedUsers.map(user=>user.id);
 
     if(users.length != 0){
-        fetchData(addUserToGroup,chatData.id,users).then(()=>handleReset())
+        try {
+          loading=true;
+          const data = await addUserToGroup(chatData.id,users);
+          updateUserList(data);
+          handleReset()
+          closeModal()
+        } catch (error) {
+          toast.error('Cannot add users')
+        }finally{
+          loading= false
+        }
+        // fetchData(addUserToGroup,chatData.id,users).then(()=>handleReset())
     }
 
   };
