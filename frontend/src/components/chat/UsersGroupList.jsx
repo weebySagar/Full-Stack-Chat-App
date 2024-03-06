@@ -5,36 +5,40 @@ import PopupMenu from "@components/ui/PopupMenu";
 import Loading from "@components/ui/Loading";
 import Badge from "@components/ui/Badge";
 
-export default function UsersGroupList({ chatData,data,isAdmin ,currentUser,closeModal}) {
-
-  
+export default function UsersGroupList({
+  chatData,
+  data,
+  isAdmin,
+  currentUser,
+  closeModal,
+}) {
   return (
     <>
       <div className="header bg-teal-800 text-white absolute top-0 left-0 right-0 px-6 py-3">
         <p>Group Members</p>
       </div>
-      
-        <ul role="list" className="divide-y divide-gray-100">
-          {data?.map((user) => (
-            <li key={user.email} className="flex justify-between gap-x-6 py-5 ">
-              <div className="flex min-w-0 gap-x-4 items-center">
-                <img
-                  className="h-10 w-10 flex-none rounded-full bg-gray-50"
-                  src={user?.imageUrl}
-                  alt=""
-                />
-                <div className="min-w-0 flex-auto">
-                  <p className="text-sm font-semibold leading-6 text-gray-900 capitalize">
-                    {user.id == currentUser.id ? "You" : user.name}
-                  </p>
-                  <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                    {user.email}
-                  </p>
-                </div>
+
+      <ul role="list" className="divide-y divide-gray-100">
+        {data?.map((user) => (
+          <li key={user.email} className="flex justify-between gap-x-6 py-5 ">
+            <div className="flex min-w-0 gap-x-4 items-center">
+              <img
+                className="h-10 w-10 flex-none rounded-full bg-gray-50"
+                src={user?.imageUrl}
+                alt=""
+              />
+              <div className="min-w-0 flex-auto">
+                <p className="text-sm font-semibold leading-6 text-gray-900 capitalize">
+                  {user.id == currentUser.id ? "You" : user.name}
+                </p>
+                <p className="mt-1 truncate text-xs leading-5 text-gray-500">
+                  {user.email}
+                </p>
               </div>
-              <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                <p className="text-sm leading-6 text-gray-900">{user?.role}</p>
-                {/* {person.lastSeen ? (
+            </div>
+            <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+              <p className="text-sm leading-6 text-gray-900">{user?.role}</p>
+              {/* {person.lastSeen ? (
                 <p className="mt-1 text-xs leading-5 text-gray-500">
                   Last seen <time dateTime={person.lastSeenDateTime}>{person.lastSeen}</time>
                 </p>
@@ -46,18 +50,21 @@ export default function UsersGroupList({ chatData,data,isAdmin ,currentUser,clos
                   <p className="text-xs leading-5 text-gray-500">Online</p>
                 </div>
               )} */}
-              </div>
-              <div>
-                { isAdmin && !chatData.groupAdminId.includes(user.id)  ? (
-                  <PopupMenu groupId={chatData.id} userId={user.id} closeModal={closeModal} />
-                ) : (
-                  <Badge name={"Admin"} showClose={false} className={"text-xs"}/>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      
+            </div>
+            <div>
+              {isAdmin && !chatData.groupAdminId.includes(user.id) ? (
+                <PopupMenu
+                  groupId={chatData.id}
+                  userId={user.id}
+                  closeModal={closeModal}
+                />
+              ) : (
+                <Badge name={"Admin"} showClose={false} className={"text-xs"} />
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }

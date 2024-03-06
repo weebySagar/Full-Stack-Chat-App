@@ -3,11 +3,11 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:3000/api';
 
 
-export const sendMessage =async (msg,groupId,receiverId) =>{
+export const sendMessage = async (message, chatId) => {
     try {
-        const response = await axios.post(BASE_URL+'/message',{msg,groupId,receiverId},{
-            headers:{
-                'Authorization' : localStorage.getItem('chathub-token')
+        const response = await axios.post(BASE_URL + '/message', { message, chatId }, {
+            headers: {
+                'Authorization': localStorage.getItem('chathub-token')
 
             }
         });
@@ -17,11 +17,17 @@ export const sendMessage =async (msg,groupId,receiverId) =>{
     }
 }
 
-export const getMessage =async (lastMsgId) =>{
+export const getMessage = async (chatId, lastMsgId) => {
     try {
-        const {data} = await axios.get(BASE_URL+'/message?lastMsgId='+lastMsgId,{
-            headers:{
-                'Authorization' :localStorage.getItem('chathub-token')
+        // const { data } = await axios.get(BASE_URL + '/message?lastMsgId=' + lastMsgId, {
+        //     headers: {
+        //         'Authorization': localStorage.getItem('chathub-token')
+
+        //     }
+        // });
+        const { data } = await axios.get(BASE_URL + '/message/' + chatId, {
+            headers: {
+                'Authorization': localStorage.getItem('chathub-token')
 
             }
         });
@@ -33,33 +39,33 @@ export const getMessage =async (lastMsgId) =>{
 }
 
 
-export const accessChat = async(userId)=>{
+export const accessChat = async (userId) => {
     try {
-        const {data} = await axios.post(BASE_URL+'/message/chats',{userId:JSON.stringify(userId)},{
-            headers:{
-                'Authorization' :localStorage.getItem('chathub-token')
+        const { data } = await axios.post(BASE_URL + '/message/chats', { userId: JSON.stringify(userId) }, {
+            headers: {
+                'Authorization': localStorage.getItem('chathub-token')
 
             }
         })
 
         console.log(data);
-        return data 
+        return data
     } catch (error) {
         console.log(error);
         throw error.response.data
     }
 }
-export const getAllChats = async()=>{
+export const getAllChats = async () => {
     try {
-        const {data} = await axios.get(BASE_URL+'/message/chats',{
-            headers:{
-                'Authorization' :localStorage.getItem('chathub-token')
+        const { data } = await axios.get(BASE_URL + '/message/chats', {
+            headers: {
+                'Authorization': localStorage.getItem('chathub-token')
 
             }
         })
 
         console.log(data);
-        return data 
+        return data
     } catch (error) {
         console.log(error);
         throw error.response.data

@@ -1,33 +1,37 @@
-const  Sequelize  = require('sequelize');
+const Sequelize = require('sequelize');
 const db = require('../db/database');
 const User = require('./user-model');
 const Message = require('./message-model');
 
-const Chat = db.define('chat',{
-    id:{
-        type:Sequelize.INTEGER,
+const Chat = db.define('chat', {
+    id: {
+        type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    users:{
-        type:Sequelize.JSON,
-        allowNull:false
+    users: {
+        type: Sequelize.JSON,
+        allowNull: false
     },
-    isGroup:{
+    isGroup: {
         type: Sequelize.BOOLEAN,
-        defaultValue:false
+        defaultValue: false
     },
-    groupAdminId:{
-        type:Sequelize.JSON,
-        allowNull:true
+    groupAdminId: {
+        type: Sequelize.JSON,
+        allowNull: true
     },
-    latestMessageId:{
-        type:Sequelize.INTEGER,
-        allowNull:true
+    latestMessageId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        // references: {
+        //     model: 'messages',
+        //     key: 'id'
+        // }
     },
-    chatName:{
-        type:Sequelize.TEXT,
-        allowNull:true
+    chatName: {
+        type: Sequelize.TEXT,
+        allowNull: true
     }
 })
 
@@ -35,7 +39,7 @@ const Chat = db.define('chat',{
 // Chat.belongsTo(User,{foreignKey:'groupAdminId',as:'groupAdmin'});
 // Chat.belongsTo(User,{foreignKey:'groupUsersId',as:'groupUsers'});
 
-
-Chat.belongsTo(Message,{foreignKey:'latestMessageId',as:'latestMessage'})
+// Chat.hasMany(Message, { foreignKey: 'chatId', as: 'messages' });
+// Chat.belongsTo(Message, { foreignKey: 'latestMessageId', as: 'latestMessage' })
 
 module.exports = Chat;

@@ -116,52 +116,52 @@ const sequelize = require('../db/database');
 
 
 exports.removeUserFromGroup = async (req, res) => {
-    try {
-        const adminId = req.user.id;
-        const { groupId, userId } = req.params;
-        console.log(groupId, userId, adminId);
+  try {
+    const adminId = req.user.id;
+    const { groupId, userId } = req.params;
+    console.log(groupId, userId, adminId);
 
-        // const group = await Group.findOne({
-        //     where: {
-        //         id: groupId,
-        //         admin: adminId
-        //     }
-        // })
+    // const group = await Group.findOne({
+    //     where: {
+    //         id: groupId,
+    //         admin: adminId
+    //     }
+    // })
 
-        // if (!group) {
-        //     return res.status(403).send('Unauthorized , Only group admins can remove users')
-        // }
+    // if (!group) {
+    //     return res.status(403).send('Unauthorized , Only group admins can remove users')
+    // }
 
-        // const response = await GroupMembership.destroy({
-        //     where: {
-        //         groupId: groupId,
-        //         userId: userId
-        //     }
-        // })
-        // console.log(response);
+    // const response = await GroupMembership.destroy({
+    //     where: {
+    //         groupId: groupId,
+    //         userId: userId
+    //     }
+    // })
+    // console.log(response);
 
-        const chat = await Chat.findOne({
-          where: {
-            id: groupId,
-            groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
-          }
-        })
-    
-        if (!chat) {
-          return res.status(403).send('Unauthorized: only group admins can remove user')
-        }
+    const chat = await Chat.findOne({
+      where: {
+        id: groupId,
+        groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
+      }
+    })
 
-        chat.users = chat.users.filter(id =>id !== +userId);
-         await chat.save();
-
-         const users = await User.findAll({where:{id:chat.users}})
-        if (users) {
-            res.status(200).send(users)
-        }
-    } catch (error) {
-      console.log(error);
-        res.status(500).send('Internal server error')
+    if (!chat) {
+      return res.status(403).send('Unauthorized: only group admins can remove user')
     }
+
+    chat.users = chat.users.filter(id => id !== +userId);
+    await chat.save();
+
+    const users = await User.findAll({ where: { id: chat.users } })
+    if (users) {
+      res.status(200).send(users)
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal server error')
+  }
 }
 
 
@@ -214,7 +214,7 @@ exports.addUserToGroup = async (req, res) => {
     chat.users = [...new Set([...chat.users, ...userId])];
     const response = await chat.save()
 
-    const users = await User.findAll({where:{id:chat.users}})
+    const users = await User.findAll({ where: { id: chat.users } })
 
     if (response && users) {
       await t.commit()

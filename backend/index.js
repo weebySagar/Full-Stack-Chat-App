@@ -15,12 +15,12 @@ app.use(cors())
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use('/api/user',userRoutes);
-app.use('/api/message',messageRoutes);
-app.use('/api/group',groupRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/message', messageRoutes);
+app.use('/api/group', groupRoutes);
 
 db.sync(
-    // {force:true}
-    ).then((result) => {
+    // { force: true }
+).then((result) => {
     app.listen(3000)
 }).catch(err => console.log(err))

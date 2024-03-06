@@ -8,93 +8,103 @@ const GroupMembership = require('../models/group-membership');
 const Chat = require('../models/chat-model');
 
 exports.sendMessage = async (req, res) => {
-    const { msg, groupId, receiverId } = req.body;
-    const userId = req.user.id;
-    const t = await sequelize.transaction();
+  const { message, chatId, } = req.body;
+  const userId = req.user.id;
+  const t = await sequelize.transaction();
 
-    try {
-        let response;
-        if (groupId) {
-            response = await Message.create({ content: msg, userId, senderId: userId, isGroup: true, groupId })
-        }
-        else {
-
-            response = await Message.create({ content: msg, userId, senderId: userId, receiverId }, { transaction: t })
-        }
-
-        if (response) {
-            await t.commit();
-            res.status(201).send('Message sent successfully')
-        }
-        else {
-            await t.rollback();
-            res.status(400).send('Message cannot send')
-        }
-    } catch (error) {
-        await t.rollback();
-        res.status(500).send('Internal server error')
+  try {
+    if (!message || !chatId) {
+      return res.status(400).send("Invalid Data")
     }
+
+    const msg = await Message.create({ content: message, userId, chatId })
+
+    const chat = await Chat.findByPk(chatId);
+    chat.update({ latestMessageId: msg.id })
+
+
+
+
+    if (msg) {
+      await t.commit();
+      res.status(201).send(msg)
+    }
+    else {
+      await t.rollback();
+      res.status(400).send('Message cannot send')
+    }
+  } catch (error) {
+    await t.rollback();
+    res.status(500).send('Internal server error')
+  }
 }
 
 
 exports.getMessage = async (req, res) => {
-    try {
-        const { lastMsgId } = req.query
+  try {
+    const { lastMsgId } = req.query;
+    const { chatId } = req.params;
 
-        let messages;
-        let personalChats;
-        let groupChats;
-        // if(lastMsgId){
-        //     messages = await Message.findAll({ where: { id:{[Op.gt]:lastMsgId},userId: req.user.id } });
-        // }
-        // else{
+    // let messages;
+    // let personalChats;
+    // let groupChats;
+    // if(lastMsgId){
+    //     messages = await Message.findAll({ where: { id:{[Op.gt]:lastMsgId},userId: req.user.id } });
+    // }
+    // else{
 
-        //     messages = await Message.findAll({ where: { userId: req.user.id } });
-        // }
+    //     messages = await Message.findAll({ where: { userId: req.user.id } });
+    // }
 
-        // if(lastMsgId){
+    // if(lastMsgId){
 
-        // groupChats = await Group.findAll({
-        //     include: [{
-        //         model: Message,
-        //         order: [['timeStamp', 'DESC']],
-        //         // limit: 1, // Get the last message
-        //         include: [{ model: User, as: 'sender' }]
-        //     }]
-        // });
+    // groupChats = await Group.findAll({
+    //     include: [{
+    //         model: Message,
+    //         order: [['timeStamp', 'DESC']],
+    //         // limit: 1, // Get the last message
+    //         include: [{ model: User, as: 'sender' }]
+    //     }]
+    // });
 
-        personalChats = await User.findAll({
-            include: [{
-                model: Message,
-                where: {
-                    senderId: req.user.id,
-                    isGroup: false
-                },
-                as: 'sentMessages',
-                order: [['timeStamp', 'DESC']],
-                include: [{
-                    model: User,
-                    as: 'receiver'
-                }]
-            }]
-        })
-        // }
-        // else{
+    // personalChats = await User.findAll({
+    //   include: [{
+    //     model: Message,
+    //     where: {
+    //       senderId: req.user.id,
+    //       isGroup: false
+    //     },
+    //     as: 'sentMessages',
+    //     order: [['timeStamp', 'DESC']],
+    //     include: [{
+    //       model: User,
+    //       as: 'receiver'
+    //     }]
+    //   }]
+    // })
+    // }
+    // else{
 
-        // }
-        messages = personalChats
-        // messages = [...personalChats,...groupChats]
+    // }
+    // messages = personalChats
+    // messages = [...personalChats,...groupChats]
 
-        // console.log(messages);
-        if (messages) {
-            res.status(200).send(messages)
-        }
-        else {
-            res.status(200).send('No messages')
-        }
-    } catch (error) {
-        res.status(500).send('Internal server error')
+    // console.log(messages);
+    const messages = await Message.findAll({
+      where: {
+        chatId: chatId
+      },
+      order: [['timestamp', 'ASC']]
+    })
+    if (messages) {
+      res.status(200).send(messages)
     }
+    else {
+      res.status(200).send('No messages')
+    }
+  } catch (error) {
+    res.status(500).send('Internal server error')
+  }
 }
 
 
@@ -208,13 +218,13 @@ exports.getMessage = async (req, res) => {
 //                 model: User,
 //                 as:'sentMessages',
 //                 attributes: ['id','name', 'email'],
-              
+
 //             },
 //             {
 //                 model: User,
 //                 as:'receiver',
 //                 attributes: ['id','name', 'email'],
-              
+
 //             }
 //             ],
 //         })
@@ -232,104 +242,104 @@ exports.getMessage = async (req, res) => {
 // }
 
 exports.accessChat = async (req, res) => {
-    try {
-      const { userId } = req.body;
-      const reqUserId = req.user.id;
-      if (!userId) {
-        console.log("UserId param not sent with request");
-        return res.sendStatus(400);
-      }
-      const allUsers = JSON.parse(userId)
-      allUsers.push(reqUserId)
-      const chat = await Chat.findOne({
+  try {
+    const { userId } = req.body;
+    const reqUserId = req.user.id;
+    if (!userId) {
+      console.log("UserId param not sent with request");
+      return res.sendStatus(400);
+    }
+    const allUsers = JSON.parse(userId)
+    allUsers.push(reqUserId)
+    const chat = await Chat.findOne({
+      where: {
+        isGroup: false,
+        [Op.and]: allUsers.map(userId => sequelize.literal(`JSON_CONTAINS(users, '${userId}')`))
+
+
+      },
+      // where: sequelize.where(
+      //   sequelize.fn('JSON_CONTAINS', sequelize.col('users'), JSON.stringify(allUsers)),
+      //   true
+      // )
+
+      // include: [
+      // {
+      //   model: User,
+      //   as: 'groupAdmin',
+      //   attributes:['name','email']
+      //   // where: { id: [req.user.id ,userId]}
+      // },
+      //   {
+      //     model: User,
+      //     as: 'users',
+      //     where: { id: userId }
+      //   },
+      // {
+      //   model: Message,
+      //   as: 'latestMessage'
+      // }
+      // ]
+    });
+
+    // const chat = await Chat.findAll()
+
+    // console.log(chat);
+
+    if (chat) {
+      // console.log(JSON.parse(chat.users));
+      const users = await User.findAll({
         where: {
-          isGroup: false,
-          [Op.and]: allUsers.map(userId => sequelize.literal(`JSON_CONTAINS(users, '${userId}')`))
-
-          
+          id: chat.users,
         },
-        // where: sequelize.where(
-        //   sequelize.fn('JSON_CONTAINS', sequelize.col('users'), JSON.stringify(allUsers)),
-        //   true
-        // )
+        attributes: { exclude: ['password'] }
+      })
 
+      chat.users = users
+      res.send(chat);
+    }
+    else {
+      const createdChat = await Chat.create({
+        users: allUsers,
+        isGroup: false,
+      });
+
+      // await createdChat.addUsers([req.user.id],[userId]);
+      // await createdChat.addUser(userId);
+
+      const fullChat = await Chat.findOne({
+        where: { id: createdChat.id },
         // include: [
-          // {
-          //   model: User,
-          //   as: 'groupAdmin',
-          //   attributes:['name','email']
-          //   // where: { id: [req.user.id ,userId]}
-          // },
         //   {
         //     model: User,
-        //     as: 'users',
-        //     where: { id: userId }
+        //     as: 'groupAdmin',
         //   },
-          // {
-          //   model: Message,
-          //   as: 'latestMessage'
-          // }
+        //   {
+        //     model: Message,
+        //     as: 'latestMessage'
+        //   }
         // ]
       });
 
-      // const chat = await Chat.findAll()
+      const users = await User.findAll({
+        where: {
+          id: fullChat.users,
+        },
+        attributes: { exclude: ['password'] }
+      })
 
-      // console.log(chat);
-      
-      if (chat) {
-        // console.log(JSON.parse(chat.users));
-        const users = await User.findAll({
-            where:{
-                id:chat.users,
-            },
-            attributes:{exclude:['password']}
-        })
+      fullChat.users = users
 
-        chat.users = users
-        res.send(chat);
-      }
-       else {
-        const createdChat = await Chat.create({
-          users:allUsers,
-          isGroup: false,
-        });
-  
-        // await createdChat.addUsers([req.user.id],[userId]);
-        // await createdChat.addUser(userId);
-  
-        const fullChat = await Chat.findOne({
-          where: { id: createdChat.id },
-          // include: [
-          //   {
-          //     model: User,
-          //     as: 'groupAdmin',
-          //   },
-          //   {
-          //     model: Message,
-          //     as: 'latestMessage'
-          //   }
-          // ]
-        });
-
-        const users = await User.findAll({
-            where:{
-                id:fullChat.users,
-            },
-            attributes:{exclude:['password']}
-        })
-
-        fullChat.users = users
-  
-        res.status(200).send(fullChat);
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(400).send(error.message);
+      res.status(200).send(fullChat);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    res.status(400).send(error.message);
+  }
+};
 
 
-exports.fetchChats = async (req,res) =>{
+exports.fetchChats = async (req, res) => {
   try {
     const userId = req.user.id;
     const chats = await Chat.findAll({
@@ -340,20 +350,19 @@ exports.fetchChats = async (req,res) =>{
       //     [Sequelize.Op.like]: `%${userId}%`,
       //   }
       // },
-      where:{
-       users: sequelize.literal(`JSON_CONTAINS(users, '${userId}')`)
+      where: {
+        users: sequelize.literal(`JSON_CONTAINS(users, '${userId}')`)
       },
-      
+
       // include:[
       //   {
       //     model:User,
       //     as:'groupAdmin',
       //   }
       // ],
-      order:[['updatedAt','DESC']]
+      order: [['updatedAt', 'DESC']]
     })
 
-    // console.log(chats);
 
     // Populate latestMessage.sender with specific attributes
     // Populate users array with specific attributes
@@ -369,7 +378,6 @@ exports.fetchChats = async (req,res) =>{
       chat.users = users;
       return chat;
     }));
-
 
 
     res.status(200).send(populatedChats)
