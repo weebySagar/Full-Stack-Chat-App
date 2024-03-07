@@ -1,10 +1,15 @@
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
+
 import { sendMessage } from "../../services/chatServices";
 import ChatContext, { useChat } from "../../context/ChatContext";
 
-export default function ChatInput({ setMessages }) {
-  const [message, setMessage] = useState("");
+export default function ChatInput({
+  setMessages,
+  message,
+  setMessage,
+  socket,
+}) {
   const { selectedChat } = useChat();
 
   const handleChange = (e) => {
@@ -20,6 +25,7 @@ export default function ChatInput({ setMessages }) {
       if (!data) {
         return toast.error("cannot send message");
       }
+      socket.emit("send-message", selectedChat.id, data);
       setMessages((messages) => [...messages, data]);
       setMessage("");
     }

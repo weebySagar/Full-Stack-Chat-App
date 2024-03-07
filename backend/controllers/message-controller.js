@@ -353,17 +353,12 @@ exports.fetchChats = async (req, res) => {
       where: {
         users: sequelize.literal(`JSON_CONTAINS(users, '${userId}')`)
       },
-
-      // include:[
-      //   {
-      //     model:User,
-      //     as:'groupAdmin',
-      //   }
-      // ],
       order: [['updatedAt', 'DESC']]
     })
+    // console.log(chats.latestMessageId);
+    // const latestMessage = await Message.findByPk(chats.latestMessageId)
 
-
+    // console.log(latestMessage);
     // Populate latestMessage.sender with specific attributes
     // Populate users array with specific attributes
     const populatedChats = await Promise.all(chats.map(async (chat) => {
@@ -374,12 +369,14 @@ exports.fetchChats = async (req, res) => {
         where: { id: userIds },
         attributes: { exclude: ['password'] }
       });
+      const latestMessage = await Message.findByPk(chat.latestMessageId);
       // Assign the fetched users to the chat object
       chat.users = users;
+      chat.latestMessageId = latestMessage
       return chat;
     }));
-
-
+    // populatedChats.latestMessageId = latestMessage
+    // console.log(populatedChats);
     res.status(200).send(populatedChats)
   } catch (error) {
     res.status(500).send(error)

@@ -9,9 +9,9 @@ export default function ChatItem({
   id,
   img,
   chatName,
-  lastMsg,
+  latestMessageId,
   lastSeen,
-  msgs,
+  unreadCount,
   isGroup,
   users,
   chatData,
@@ -34,12 +34,12 @@ export default function ChatItem({
       />
       <div className="message flex-grow ml-3 overflow-hidden whitespace-nowrap text-ellipsis">
         <h3 className="text-lg">{isGroup ? chatName : getUser(users).name}</h3>
-        <p className="text-sm">{lastMsg}</p>
+        <p className="text-sm">{latestMessageId?.content}</p>
       </div>
       <div className="timestamp flex-none text-end">
         <p className="text-xs text-neutral-700">{lastSeen}</p>
         <p className="text-xs py-1 px-[6px] inline-block bg-teal-800 rounded-full text-neutral-100">
-          {msgs}
+          {unreadCount > 0 && unreadCount}
         </p>
       </div>
     </div>

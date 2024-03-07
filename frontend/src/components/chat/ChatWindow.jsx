@@ -8,37 +8,57 @@ import ChatContext, { useChat } from "../../context/ChatContext";
 import { useAuth } from "../../context/UserContext";
 import { pickRandomColor } from "../../utils/helper";
 import ScrollableFeed from "react-scrollable-feed";
+import { io } from "socket.io-client";
 // import ChatBg from "@images/whatsapp-light-bg.png"
 // import ChatBg from "@images/whatsapp-dark-bg.png"
 
+const socket = io("http://localhost:3000");
+// let socket;
 export default function ChatWindow() {
   const [messages, setMessages] = useState([]);
-  const { selectedChat } = useChat();
+  const [message, setMessage] = useState("");
+
+  const { selectedChat, setChats } = useChat();
   const { user } = useAuth();
 
   useEffect(() => {
-    const storedMsgs =
-      JSON.parse(localStorage.getItem("chathub-messages")) ?? [];
-    setMessages(storedMsgs);
+    // socket = io("http://localhost:3000");
+    socket.on("connect", () => {});
+    socket.on("receive-message", (message) => {
+      setMessages((msgs) => [...msgs, message]);
+    });
 
-    const fetchRecentMessages = async () => {
-      let lastMsgId = null;
-      if (storedMsgs.length > 0) {
-        lastMsgId = storedMsgs[storedMsgs.length - 1].id || null;
-      }
-      const newMsgs = await getMessage(lastMsgId);
-
-      const updatedMsg = [...storedMsgs, ...newMsgs].slice(-10);
-      localStorage.setItem("chathub-messages", JSON.stringify(updatedMsg));
-      setMessages(updatedMsg);
+    return () => {
+      socket.disconnect();
     };
+  }, []);
+
+  // useEffect(() => {
+
+  // });
+  useEffect(() => {
+    // const storedMsgs =
+    //   JSON.parse(localStorage.getItem("chathub-messages")) ?? [];
+    // setMessages(storedMsgs);
+
+    // const fetchRecentMessages = async () => {
+    //   let lastMsgId = null;
+    //   if (storedMsgs.length > 0) {
+    //     lastMsgId = storedMsgs[storedMsgs.length - 1].id || null;
+    //   }
+    //   const newMsgs = await getMessage(lastMsgId);
+
+    //   const updatedMsg = [...storedMsgs, ...newMsgs].slice(-10);
+    //   localStorage.setItem("chathub-messages", JSON.stringify(updatedMsg));
+    //   setMessages(updatedMsg);
+    // };
 
     const fetchMessages = async () => {
       const msgs = await getMessage(selectedChat.id);
       setMessages(msgs);
+      socket.emit("join-chat", selectedChat.id);
     };
     fetchMessages();
-
     // fetchRecentMessages();
   }, [selectedChat.id]);
 
@@ -105,7 +125,12 @@ export default function ChatWindow() {
         className={`bg-image absolute inset-0  opacity-30 `}
         style={{ backgroundImage: `url(${ChatBg})` }}
       ></div>
-      <ChatInput setMessages={setMessages} />
+      <ChatInput
+        setMessages={setMessages}
+        message={message}
+        setMessage={setMessage}
+        socket={socket}
+      />
     </div>
   );
 }
