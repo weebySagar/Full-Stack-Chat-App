@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { sendMessage } from "../../services/chatServices";
 import ChatContext, { useChat } from "../../context/ChatContext";
 
-export default function ChatInput() {
+export default function ChatInput({ setMessages }) {
   const [message, setMessage] = useState("");
   const { selectedChat } = useChat();
 
@@ -15,18 +15,22 @@ export default function ChatInput() {
     e.preventDefault();
 
     if (message.trim()) {
-      const status = await sendMessage(message, selectedChat.id);
+      const data = await sendMessage(message, selectedChat.id);
 
-      if (status !== 201) {
+      if (!data) {
         return toast.error("cannot send message");
       }
-
+      setMessages((messages) => [...messages, data]);
       setMessage("");
     }
   };
   return (
-    <form noValidate onSubmit={handleSubmit}>
-      <div className="chat-input absolute bottom-0  w-full bg-neutral-400 py-2 px-8 flex items-center gap-5">
+    <form
+      noValidate
+      onSubmit={handleSubmit}
+      className="chat-input w-full absolute bottom-0 z-[2]"
+    >
+      <div className=" bg-neutral-400 py-2 px-8 flex items-center gap-5">
         <div className="input flex-grow">
           <input
             type="text"

@@ -5,13 +5,13 @@ const BASE_URL = 'http://localhost:3000/api';
 
 export const sendMessage = async (message, chatId) => {
     try {
-        const response = await axios.post(BASE_URL + '/message', { message, chatId }, {
+        const { data } = await axios.post(BASE_URL + '/message', { message, chatId }, {
             headers: {
                 'Authorization': localStorage.getItem('chathub-token')
 
             }
         });
-        return response.status;
+        return data;
     } catch (error) {
         throw error.response.data;
     }
