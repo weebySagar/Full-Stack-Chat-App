@@ -1,23 +1,37 @@
 const Message = require('../models/message-model');
 const sequelize = require('../db/database');
 
-const { Op, Sequelize, col, cast } = require('sequelize');
+const { Op, Sequelize, col, cast, where } = require('sequelize');
 const User = require('../models/user-model');
 const Group = require('../models/group-model');
 const GroupMembership = require('../models/group-membership');
 const Chat = require('../models/chat-model');
+const Image = require('../models/image-model');
 
 exports.sendMessage = async (req, res) => {
-  const { message, chatId, } = req.body;
+  const { message, image, chatId } = req.body;
   const userId = req.user.id;
   const t = await sequelize.transaction();
-
+  let msg = null;
   try {
-    if (!message || !chatId) {
+    if (!chatId) {
       return res.status(400).send("Invalid Data")
     }
+    if (image) {
+      const img = await Image.create({ imageData: image }, { transaction: t });
+      msg = await Message.create({ content: message, userId, chatId, imageId: img.id }, { transaction: t })
+      const newMsg = await Message.findOne({ where: { id: msg.id }, transaction: t, include: [{ model: Image }] })
+      if (msg && img && newMsg) {
+        await t.commit();
+        return res.status(201).send(newMsg)
+      }
+      else {
+        await t.rollback();
+        res.status(400).send('Message cannot send')
 
-    const msg = await Message.create({ content: message, userId, chatId })
+      }
+    }
+    msg = await Message.create({ content: message, userId, chatId })
 
     const chat = await Chat.findByPk(chatId);
     chat.update({ latestMessageId: msg.id })
@@ -34,6 +48,7 @@ exports.sendMessage = async (req, res) => {
       res.status(400).send('Message cannot send')
     }
   } catch (error) {
+    console.log(error);
     await t.rollback();
     res.status(500).send('Internal server error')
   }
@@ -94,6 +109,14 @@ exports.getMessage = async (req, res) => {
       where: {
         chatId: chatId
       },
+      include: {
+        model: Image,
+        // attributes: [
+        //   'id',
+        //   [Sequelize.literal("CONCAT('data:image/png;base64,',TO_BASE64(imageData))"), "imageData"]
+        // ]
+      },
+      // raw: true,
       order: [['timestamp', 'ASC']]
     })
     if (messages) {

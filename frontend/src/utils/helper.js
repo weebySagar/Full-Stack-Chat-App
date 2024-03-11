@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 import { useAuth } from "../context/UserContext";
 
 export const pickRandomColor = (isText = false) => {
@@ -22,4 +24,24 @@ export const getUser = (users) => {
     } else {
         return user.user
     }
+};
+
+export const formatDate = (data) => {
+    const date = new Date(data);
+
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    // Format hours, minutes, and seconds to have leading zeros if needed
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    // Construct the 24-hour time string
+    const time24Hours = `${formattedHours}:${formattedMinutes}`;
+    return time24Hours;
+}
+
+export const convertBase64 = (imageBuffer) => {
+    const base64 = Buffer.from(imageBuffer, "base64");
+    return base64;
 };

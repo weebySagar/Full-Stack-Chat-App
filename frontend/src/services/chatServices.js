@@ -3,9 +3,9 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:3000/api';
 
 
-export const sendMessage = async (message, chatId) => {
+export const sendMessage = async (message, image, chatId) => {
     try {
-        const { data } = await axios.post(BASE_URL + '/message', { message, chatId }, {
+        const { data } = await axios.post(BASE_URL + '/message', { message, image, chatId }, {
             headers: {
                 'Authorization': localStorage.getItem('chathub-token')
 

@@ -4,6 +4,7 @@ const db = require('../db/database');
 const User = require('./user-model');
 // const Group = require('./group-model');
 const Chat = require('./chat-model');
+const Image = require('./image-model');
 
 
 const Message = db.define('message', {
@@ -15,10 +16,10 @@ const Message = db.define('message', {
     },
     content: {
         type: Sequelize.TEXT,
-        allowNull: false,
-        validate: {
-            notEmpty: true
-        }
+        allowNull: true,
+        // validate: {
+        //     notEmpty: true
+        // }
     },
     timeStamp: {
         type: Sequelize.DATE,
@@ -32,7 +33,11 @@ const Message = db.define('message', {
         //     model: 'chats',
         //     key: 'id'
         // }
-    }
+    },
+    // imageId: {
+    //     type: Sequelize.INTEGER,
+    //     allowNull: true,
+    // }
 });
 
 User.hasMany(Message);
@@ -47,6 +52,5 @@ Message.belongsTo(User);
 
 // User.hasMany(Message,{as:'sender',foreignKey:'senderId'});
 // Message.belongsTo(User,{as:'receiver',foreignKey:'receiverId'});
-
 
 module.exports = Message

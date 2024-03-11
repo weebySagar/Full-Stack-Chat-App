@@ -14,7 +14,10 @@ const io = socket(server, {
 
 
 const db = require('./db/database');
-const Chat = require('./models/chat-model')
+const Image = require('./models/image-model');
+const User = require('./models/user-model');
+const Message = require('./models/message-model');
+const Chat = require('./models/chat-model');
 
 const userRoutes = require('./routes/user-route');
 const messageRoutes = require('./routes/message-route');
@@ -23,7 +26,7 @@ const groupRoutes = require('./routes/group-route');
 
 app.use(cors())
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
 app.use('/api/user', userRoutes);
 app.use('/api/message', messageRoutes);

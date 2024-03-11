@@ -7,6 +7,7 @@ import useFetch from "@hooks/useFetch";
 import { getGroups } from "../../services/groupServices";
 import { getAllChats } from "../../services/chatServices";
 import { useChat } from "../../context/ChatContext";
+import ScrollableFeed from "react-scrollable-feed";
 
 export default function ChatList() {
   const { data, fetchData, loading } = useFetch();
@@ -17,18 +18,20 @@ export default function ChatList() {
 
   useEffect(() => {
     if (data) {
-      setChats([...chats, ...updatedChats]); // Update chats state by
+      setChats([...chats, ...data]); // Update chats state by
     }
   }, [data]);
   return (
-    <div className="chat-list relative bg-neutral-300  h-full">
+    <div className="chat-list relative   h-full">
       <ChatHeader />
       <ChatSearch />
       <div className="list">
-        {!loading &&
-          chats?.map((chat) => (
-            <ChatItem {...chat} key={chat?.id} chatData={chat} />
-          ))}
+        <ScrollableFeed>
+          {!loading &&
+            chats?.map((chat) => (
+              <ChatItem {...chat} key={chat?.id} chatData={chat} />
+            ))}
+        </ScrollableFeed>
       </div>
     </div>
   );
