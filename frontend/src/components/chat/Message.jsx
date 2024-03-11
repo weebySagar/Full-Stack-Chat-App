@@ -37,6 +37,7 @@ const Message = ({ msg, currentUser, selectedChat }) => {
                   src={convertBase64(msg?.image?.imageData.data)}
                   alt=""
                   className="h-60 w-48 "
+                  loading="lazy"
                 />
               </a>
             </FancyBox>
@@ -57,7 +58,7 @@ const Message = ({ msg, currentUser, selectedChat }) => {
             msg.userId === currentUser.id ? "bg-green-200 " : "bg-blue-200"
           } ${
             msg?.image?.imageData ? "max-w-52" : "max-w-[70%]"
-          } px-2 py-1 rounded shadow inline-block  break-words whitespace-pre-wrap leading-none`}
+          } px-2 py-1 rounded shadow inline-block  break-words whitespace-pre-wrap`}
         >
           {msg?.image?.imageData && (
             <FancyBox>
@@ -69,6 +70,7 @@ const Message = ({ msg, currentUser, selectedChat }) => {
                   src={convertBase64(msg?.image?.imageData.data)}
                   alt=""
                   className="h-60 w-48 "
+                  loading="lazy"
                 />
               </a>
             </FancyBox>

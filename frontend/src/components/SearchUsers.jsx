@@ -58,7 +58,9 @@ export default function SearchUsers({
                 !selectedUsersSet.has(user.email) && (
                   <UserList
                     user={user}
-                    handleSelectedUser={startChat ? handleSubmit :handleSelectedUser}
+                    handleSelectedUser={
+                      startChat ? handleSubmit : handleSelectedUser
+                    }
                     key={user?.id}
                     startChat={startChat}
                   />
@@ -78,7 +80,7 @@ export default function SearchUsers({
           >
             {loading ? (
               <>
-                <i class="fa-solid fa-spinner-third animate-spin mr-2"></i>{" "}
+                <i className="fa-solid fa-spinner-third animate-spin mr-2"></i>{" "}
                 Loading
               </>
             ) : existingUsers ? (

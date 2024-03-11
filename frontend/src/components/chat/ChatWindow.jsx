@@ -72,6 +72,7 @@ export default function ChatWindow() {
               msg={msg}
               selectedChat={selectedChat}
               currentUser={user.user}
+              key={msg?.id}
             />
           ))}
         </ScrollableFeed>

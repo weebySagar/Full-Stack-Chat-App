@@ -26,20 +26,19 @@ export default function ChatInput({
       if (!data) {
         return toast.error("cannot send message");
       }
-    } else {
-      if (message.trim()) {
-        data = await sendMessage(message, null, selectedChat.id);
-        if (!data) {
-          return toast.error("cannot send message");
-        }
+    } else if (message.trim()) {
+      data = await sendMessage(message, null, selectedChat.id);
+      if (!data) {
+        return toast.error("cannot send message");
       }
     }
-    console.log(data);
 
-    socket.emit("send-message", selectedChat.id, data);
-    setMessages((messages) => [...messages, data]);
-    setMessage("");
-    setPreviewImage(null);
+    if (data) {
+      socket.emit("send-message", selectedChat.id, data);
+      setMessages((messages) => [...messages, data]);
+      setMessage("");
+      setPreviewImage(null);
+    }
   };
 
   const handleClosePreviewImage = () => {
@@ -73,7 +72,7 @@ export default function ChatInput({
               type="submit"
             >
               <i
-                class="fa-solid fa-paper-plane-top"
+                className="fa-solid fa-paper-plane-top"
                 style={{ color: "#d4d4d4" }}
               ></i>
             </button>
