@@ -22,10 +22,10 @@ export default function ChatList() {
     }
   }, [data]);
   return (
-    <div className="chat-list relative   h-full">
+    <div className="chat-list relative bg-neutral-300  h-full">
       <ChatHeader />
       <ChatSearch />
-      <div className="list">
+      <div className="list ">
         <ScrollableFeed>
           {!loading &&
             chats?.map((chat) => (

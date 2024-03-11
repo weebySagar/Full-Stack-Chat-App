@@ -1,6 +1,7 @@
 import React from "react";
 
 import { convertBase64, formatDate, pickRandomColor } from "../../utils/helper";
+import FancyBox from "@components/FancyBox";
 
 const Message = ({ msg, currentUser, selectedChat }) => {
   return (
@@ -27,11 +28,18 @@ const Message = ({ msg, currentUser, selectedChat }) => {
             )}
           </p>
           {msg?.image?.imageData && (
-            <img
-              src={convertBase64(msg?.image?.imageData.data)}
-              alt=""
-              className="h-60 w-48 "
-            />
+            <FancyBox>
+              <a
+                data-fancybox="gallery"
+                href={convertBase64(msg?.image?.imageData.data)}
+              >
+                <img
+                  src={convertBase64(msg?.image?.imageData.data)}
+                  alt=""
+                  className="h-60 w-48 "
+                />
+              </a>
+            </FancyBox>
           )}
 
           <p className="break-words whitespace-pre-wrap">
@@ -52,11 +60,18 @@ const Message = ({ msg, currentUser, selectedChat }) => {
           } px-2 py-1 rounded shadow inline-block  break-words whitespace-pre-wrap leading-none`}
         >
           {msg?.image?.imageData && (
-            <img
-              src={convertBase64(msg?.image?.imageData.data)}
-              alt=""
-              className="h-60 w-48 "
-            />
+            <FancyBox>
+              <a
+                data-fancybox="gallery"
+                href={convertBase64(msg?.image?.imageData.data)}
+              >
+                <img
+                  src={convertBase64(msg?.image?.imageData.data)}
+                  alt=""
+                  className="h-60 w-48 "
+                />
+              </a>
+            </FancyBox>
           )}
           <p>
             {msg?.content}
