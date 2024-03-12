@@ -9,6 +9,7 @@ import { useAuth } from "../../context/UserContext";
 import ScrollableFeed from "react-scrollable-feed";
 import { io } from "socket.io-client";
 import Message from "./Message";
+import Loading from "@components/ui/Loading";
 // import ChatBg from "@images/whatsapp-light-bg.png"
 // import ChatBg from "@images/whatsapp-dark-bg.png"
 
@@ -17,6 +18,7 @@ const socket = io("http://localhost:3000");
 export default function ChatWindow() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { selectedChat, setChats } = useChat();
   const { user } = useAuth();
@@ -54,9 +56,11 @@ export default function ChatWindow() {
     // };
 
     const fetchMessages = async () => {
+      setLoading(true);
       const msgs = await getMessage(selectedChat.id);
       setMessages(msgs);
       socket.emit("join-chat", selectedChat.id);
+      setLoading(false);
     };
     fetchMessages();
     // fetchRecentMessages();
@@ -67,14 +71,18 @@ export default function ChatWindow() {
       <ChatHeader chatData={selectedChat} />
       <div className="messages-wrapper  w-full h-full absolute pb-32 z-[1] ">
         <ScrollableFeed>
-          {messages?.map((msg) => (
-            <Message
-              msg={msg}
-              selectedChat={selectedChat}
-              currentUser={user.user}
-              key={msg?.id}
-            />
-          ))}
+          {!loading ? (
+            messages?.map((msg) => (
+              <Message
+                msg={msg}
+                selectedChat={selectedChat}
+                currentUser={user.user}
+                key={msg?.id}
+              />
+            ))
+          ) : (
+            <Loading />
+          )}
         </ScrollableFeed>
       </div>
 

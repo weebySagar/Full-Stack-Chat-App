@@ -8,6 +8,7 @@ import { getGroups } from "../../services/groupServices";
 import { getAllChats } from "../../services/chatServices";
 import { useChat } from "../../context/ChatContext";
 import ScrollableFeed from "react-scrollable-feed";
+import Loading from "@components/ui/Loading";
 
 export default function ChatList() {
   const { data, fetchData, loading } = useFetch();
@@ -27,10 +28,13 @@ export default function ChatList() {
       <ChatSearch />
       <div className="list ">
         <ScrollableFeed>
-          {!loading &&
+          {!loading ? (
             chats?.map((chat) => (
               <ChatItem {...chat} key={chat?.id} chatData={chat} />
-            ))}
+            ))
+          ) : (
+            <Loading />
+          )}
         </ScrollableFeed>
       </div>
     </div>

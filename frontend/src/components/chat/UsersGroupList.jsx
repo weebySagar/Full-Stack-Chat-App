@@ -52,13 +52,15 @@ export default function UsersGroupList({
               )} */}
             </div>
             <div>
-              {isAdmin && !chatData.groupAdminId.includes(user.id) ? (
+              {isAdmin && !chatData.groupAdminId.includes(user.id) && (
                 <PopupMenu
                   groupId={chatData.id}
                   userId={user.id}
                   closeModal={closeModal}
                 />
-              ) : (
+              )}
+
+              {chatData.groupAdminId.includes(user.id) && (
                 <Badge name={"Admin"} showClose={false} className={"text-xs"} />
               )}
             </div>

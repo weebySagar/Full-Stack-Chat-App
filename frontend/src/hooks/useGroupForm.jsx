@@ -3,14 +3,15 @@ import React, { useCallback, useRef, useState } from "react";
 import { getSearchUser } from "../services/apiServices";
 import { createGroup } from "../services/groupServices";
 
-export default function useGroupForm(existingUsers,newChat) {
+export default function useGroupForm(existingUsers, newChat) {
   const [groupName, setGroupName] = useState("");
   const [searchedUser, setSearchedUser] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [selectedUser ,setSelectedUser] = useState();
+  const [selectedUser, setSelectedUser] = useState();
   const [selectedUsersSet, setSelectedUsersSet] = useState(
     new Set(existingUsers?.map((user) => user.email) || [])
   );
+  const [loading, setLoading] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -20,8 +21,12 @@ export default function useGroupForm(existingUsers,newChat) {
       return setGroupName(value);
     }
     if (value.trim()) {
-        const users = await getSearchUser(value);
-        setSearchedUser(users.filter(user=> !selectedUsersSet.has(user.email)));
+      setLoading(true);
+      const users = await getSearchUser(value);
+      setSearchedUser(
+        users.filter((user) => !selectedUsersSet.has(user.email))
+      );
+      setLoading(false);
     }
   };
 
@@ -42,11 +47,9 @@ export default function useGroupForm(existingUsers,newChat) {
   const optimisedChange = useCallback(debounce(handleChange, 500), []);
 
   const handleSelectedUser = (user) => {
-    if(newChat){
-      setSelectedUser(user)
-    }
-    else{
-
+    if (newChat) {
+      setSelectedUser(user);
+    } else {
       setSelectedUsers((prev) => [...prev, user]);
       setSelectedUsersSet(new Set([...selectedUsersSet, user.email]));
       inputRef.current.value = "";
@@ -85,7 +88,8 @@ export default function useGroupForm(existingUsers,newChat) {
     handleReset,
     handleChange,
     inputRef,
-    selectedUser
+    selectedUser,
+    loading,
     // handleSubmit
   };
 }

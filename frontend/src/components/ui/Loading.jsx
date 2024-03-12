@@ -4,13 +4,13 @@ export default function Loading() {
   return (
     <div className="flex items-center justify-center w-full h-full">
       <svg
-        className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-800"
+        className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-800 z-10"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
       >
         <circle
-          className="opacity-25"
+          className="opacity-25 z-10"
           cx="12"
           cy="12"
           r="10"

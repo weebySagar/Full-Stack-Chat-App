@@ -1,33 +1,38 @@
-import React,{ createContext,useContext,useEffect,useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const UserContext = createContext();
 
 const initialState = {
-    user:JSON.parse(localStorage.getItem('chathub-user')) || null,
-    token : localStorage.getItem('chat-token') || null
-}
+  user: JSON.parse(localStorage.getItem("chathub-user")) || null,
+  token: localStorage.getItem("chathub-token") || null,
+};
 
-export const UserProvider = ({children})=>{
-    const [user,setUser] = useState(initialState);
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(initialState);
 
-    useEffect(()=>{
-        const token =localStorage.getItem('chat-token');
-        const user =JSON.parse(localStorage.getItem('chathubuser'))
-        
-        if (token &&user) {
-            setUser(...user,token,user);
-        }
-    },[])
+  const login = (user, token) => {
+    setUser({ ...user, user, token });
+  };
 
-    return (
-        <UserContext.Provider value={{user}}>
-            {children}
-        </UserContext.Provider>
-    )
-} 
+  useEffect(() => {
+    const token = localStorage.getItem("chathub-token");
+    const newUser = JSON.parse(localStorage.getItem("chathub-user"));
 
-export default UserContext
+    if (token && newUser) {
+      //   setUser(...user, token, user);
+      setUser({ ...user, token, user: newUser });
+    }
+  }, []);
 
-export const useAuth=()=>{
-    return useContext(UserContext)
-}
+  return (
+    <UserContext.Provider value={{ user, login }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+export default UserContext;
+
+export const useAuth = () => {
+  return useContext(UserContext);
+};

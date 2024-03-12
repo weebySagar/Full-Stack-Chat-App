@@ -7,11 +7,12 @@ import {
 } from "../../services/groupServices";
 import { useChat } from "../../context/ChatContext";
 import toast from "react-hot-toast";
+import Loading from "./Loading";
 
 const PopupMenu = ({ groupId, userId, closeModal }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data, fetchData } = useFetch();
   const { updateUserList, updateGroupAdmin } = useChat();
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -19,8 +20,11 @@ const PopupMenu = ({ groupId, userId, closeModal }) => {
 
   const handleRemoveUser = async () => {
     try {
+      setIsLoading(true);
+      setIsOpen(false);
       const data = await removeUserFromGroup(groupId, userId);
       updateUserList(data);
+      setIsLoading(false);
       closeModal();
     } catch (error) {
       toast.error("Cannot remove user");
@@ -29,8 +33,12 @@ const PopupMenu = ({ groupId, userId, closeModal }) => {
 
   const handleMakeUserAdmin = async () => {
     try {
+      setIsLoading(true);
+      setIsOpen(false);
+
       const data = await makeUserAdmin(groupId, userId);
       updateGroupAdmin(data);
+      setIsLoading(false);
       closeModal();
     } catch (error) {
       toast.error("Cannot make admin");
@@ -39,20 +47,24 @@ const PopupMenu = ({ groupId, userId, closeModal }) => {
 
   return (
     <div className="relative">
-      <button
-        onClick={toggleMenu}
-        className="p-3 bg-transparent text-gray-500 rounded hover:text-gray-900 focus:outline-none"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-          className="h-5 w-5"
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <button
+          onClick={toggleMenu}
+          className="p-3 bg-transparent text-gray-500 rounded hover:text-gray-900 focus:outline-none"
         >
-          <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z"></path>
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+            className="h-5 w-5"
+          >
+            <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z"></path>
+          </svg>
+        </button>
+      )}
 
       {isOpen && (
         <div

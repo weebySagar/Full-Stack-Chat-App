@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Input from "@components/ui/Input";
 import Badge from "@components/ui/Badge";
@@ -22,27 +22,27 @@ export default function GroupForm({ closeModal }) {
     inputRef,
     optimisedChange,
     handleRemoveSelectedUser,
+    loading,
     // handleSubmit
   } = useGroupForm();
 
-  const { setChats,setSelectedChat } = useChat();
-  let loading = false;
+  const { setChats, setSelectedChat } = useChat();
+  const [chatCreatedLoading, setChatCreatedLoading] = useState(false);
 
   const handleSubmit = async () => {
     const users = selectedUsers?.map((user) => user.id);
     if (users.length >= 2 && groupName) {
       try {
-        loading= true
+        setChatCreatedLoading(true);
         const data = await createGroup(groupName, users);
-        setChats((chat) => [data,...chat ]);
-        setSelectedChat(data)
+        setChats((chat) => [data, ...chat]);
+        setSelectedChat(data);
         handleReset();
         closeModal();
       } catch (error) {
-        toast.error(error)
-      }
-      finally{
-        loading=false;
+        toast.error(error);
+      } finally {
+        setChatCreatedLoading(false);
       }
     }
   };
@@ -126,6 +126,7 @@ export default function GroupForm({ closeModal }) {
         inputRef={inputRef}
         handleRemoveSelectedUser={handleRemoveSelectedUser}
         optimisedChange={optimisedChange}
+        chatCreatedLoading={chatCreatedLoading}
       />
     </>
   );
