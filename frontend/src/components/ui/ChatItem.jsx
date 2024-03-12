@@ -4,10 +4,11 @@ import CircleAvatar from "./CircleAvatar";
 import ChatContext, { useChat } from "../../context/ChatContext";
 import { useAuth } from "../../context/UserContext";
 import { getUser } from "../../utils/helper";
+import AvatarImg from "@images/default-avatar.jpg";
 
 export default function ChatItem({
   id,
-  img,
+  imageUrl,
   chatName,
   latestMessageId,
   lastSeen,
@@ -29,8 +30,9 @@ export default function ChatItem({
         <CircleAvatar
           className={"h-9 w-9 bg-teal-800"}
           img={
-            img ||
-            "https://images.unsplash.com/photo-1504473114289-43f5e302d6bb?q=80&w=2151&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            // img ||
+            // "https://images.unsplash.com/photo-1504473114289-43f5e302d6bb?q=80&w=2151&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            (isGroup ? imageUrl : getUser(users).imageUrl) || AvatarImg
           }
         />
       </div>

@@ -21,6 +21,9 @@ export const UserProvider = ({ children }) => {
     setUser(initialState);
   };
 
+  const updateUserDetails = (updatedUser) => {
+    setUser({ ...user, user: updatedUser });
+  };
   useEffect(() => {
     const token = localStorage.getItem("chathub-token");
     const newUser = JSON.parse(localStorage.getItem("chathub-user"));
@@ -32,7 +35,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, updateUserDetails }}>
       {children}
     </UserContext.Provider>
   );

@@ -35,3 +35,17 @@ export const getSearchUser = async (email) => {
         throw error.response.data
     }
 }
+
+export const updateUser = async (user) => {
+    try {
+        const { data } = await axios.put(BASE_URL + '/user/update', user, {
+            headers: {
+                Authorization: localStorage.getItem('chathub-token')
+            }
+        })
+        console.log(data);
+        return data
+    } catch (error) {
+        throw error.response.data
+    }
+}

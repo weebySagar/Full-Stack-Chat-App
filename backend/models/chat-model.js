@@ -32,6 +32,10 @@ const Chat = db.define('chat', {
     chatName: {
         type: Sequelize.TEXT,
         allowNull: true
+    },
+    imageUrl: {
+        type: Sequelize.STRING,
+        allowNull: true
     }
 })
 

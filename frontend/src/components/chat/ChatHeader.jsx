@@ -5,9 +5,11 @@ import MyModal from "@components/ui/Modal";
 import ChatGroupDetails from "./ChatGroupDetails";
 import { getUser } from "../../utils/helper";
 import UserDetail from "@components/ui/UserDetail";
+import AvatarImg from "@images/default-avatar.jpg";
 
 export default function ChatHeader({ chatData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(chatData);
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -23,9 +25,12 @@ export default function ChatHeader({ chatData }) {
           onClick={handleOpenModal}
         >
           <CircleAvatar
-            className={"h-12 w-12 bg-teal-950"}
+            className={"h-12 w-12 "}
             img={
-              "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/7f7fb319428103.562da3a4c90fd.png"
+              // "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/7f7fb319428103.562da3a4c90fd.png"
+              chatData?.isGroup
+                ? chatData?.imageUrl
+                : getUser(chatData?.users)?.imageUrl || AvatarImg
             }
           />
           <h1 className="text-neutral-200 text-lg">
