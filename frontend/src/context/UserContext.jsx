@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext();
 
@@ -14,6 +15,12 @@ export const UserProvider = ({ children }) => {
     setUser({ ...user, user, token });
   };
 
+  const logout = () => {
+    localStorage.removeItem("chathub-user");
+    localStorage.removeItem("chathub-token");
+    setUser(initialState);
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("chathub-token");
     const newUser = JSON.parse(localStorage.getItem("chathub-user"));
@@ -25,7 +32,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, login }}>
+    <UserContext.Provider value={{ user, login, logout }}>
       {children}
     </UserContext.Provider>
   );

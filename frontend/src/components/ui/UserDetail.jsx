@@ -1,8 +1,18 @@
 import React from "react";
 import { getUser } from "../../utils/helper";
+import { useAuth } from "../../context/UserContext";
+import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
 export default function UserDetail({ users }) {
   const user = getUser(users);
+  const { user: currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
   return (
     <div className="flex flex-col text-center p-8 ">
       <img
@@ -19,6 +29,18 @@ export default function UserDetail({ users }) {
       <p className="mt-3 text-md text-gray-500">
         <a href={`tel:${user.phone}`}>{user.phone}</a>
       </p>
+
+      {user.id === currentUser.user.id && (
+        // <button className="bg-red-200 text-red-500 p-2 mt-2 rounded-lg border border-red-300 ho">
+        //   Logout
+        // </button>
+        <Button
+          className={"bg-red-200 !text-red-600 mt-5"}
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      )}
     </div>
   );
 }
