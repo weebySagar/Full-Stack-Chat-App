@@ -252,3 +252,26 @@ exports.createGroupChat = async (req, res) => {
     res.status(500).send('Internal server error')
   }
 }
+
+exports.updateGroup = async (req, res) => {
+  try {
+    // const { chatId } = req.params;
+    const { chatName, imgUrl, chatId } = req.body;
+    console.log(req.body);
+
+    const chat = await Chat.findByPk(chatId);
+    if (!imgUrl) {
+
+      chat.update({ chatName })
+    }
+    else {
+      chat.update({ chatName, imageUrl: imgUrl })
+    }
+
+    const updatedChat = await chat.save();
+    res.status(201).send(updatedChat);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal server error')
+  }
+}

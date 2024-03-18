@@ -7,12 +7,13 @@ export default function Button({
   children,
   onClick,
   href,
-  className
+  className,
 }) {
   return (
     <>
       {as === "button" ? (
         <button
+          // {...props}
           className={`bg-teal-500 text-white py-2 px-4 rounded-md ${
             variant == "outline"
               ? "bg-transparent !text-teal-500 hover:bg-teal-500/20"

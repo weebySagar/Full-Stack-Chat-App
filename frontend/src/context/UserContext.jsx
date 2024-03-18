@@ -21,8 +21,9 @@ export const UserProvider = ({ children }) => {
     setUser(initialState);
   };
 
-  const updateUserDetails = (updatedUser) => {
+  const updateUserDetails = updatedUser => {
     setUser({ ...user, user: updatedUser });
+    localStorage.setItem("chathub-user", JSON.stringify(updatedUser));
   };
   useEffect(() => {
     const token = localStorage.getItem("chathub-token");

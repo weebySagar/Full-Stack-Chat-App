@@ -30,6 +30,8 @@ export default function ChatHeader({ chatData }) {
               // "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/7f7fb319428103.562da3a4c90fd.png"
               chatData?.isGroup
                 ? chatData?.imageUrl
+                  ? chatData.imageUrl
+                  : AvatarImg
                 : getUser(chatData?.users)?.imageUrl || AvatarImg
             }
           />

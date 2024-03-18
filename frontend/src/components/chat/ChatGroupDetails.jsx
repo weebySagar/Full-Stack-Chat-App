@@ -9,13 +9,14 @@ import UsersGroupList from "./UsersGroupList";
 import AddUserToGroup from "./AddUserToGroup";
 import { useChat } from "../../context/ChatContext";
 import { useAuth } from "../../context/UserContext";
+import EditComponent from "@components/EditComponent";
 
-export default function ChatGroupDetails({ chatData,closeModal }) {
+export default function ChatGroupDetails({ chatData, closeModal }) {
   const { data, loading, fetchData } = useFetch();
   const [isAdmin, setIsAdmin] = useState(false);
-  
-  const {selectedChat}=useChat();
-  const {user:currentUser} = useAuth()
+
+  const { selectedChat } = useChat();
+  const { user: currentUser } = useAuth();
 
   // useEffect(() => {
   //   fetchData(getGroupUsers, chatData.id);
@@ -24,26 +25,36 @@ export default function ChatGroupDetails({ chatData,closeModal }) {
   useEffect(() => {
     if (!selectedChat || !currentUser.user) return;
 
-    const user = selectedChat.users.find((user) => user.id == currentUser.user.id);
+    const user = selectedChat.users.find(
+      user => user.id == currentUser.user.id
+    );
     const isAdmin = selectedChat.groupAdminId.includes(currentUser.user.id);
     setIsAdmin(user && isAdmin);
-  }, [ selectedChat]);
+  }, [selectedChat]);
 
   return (
     <div className="group-details h-full overflow-y-scroll pt-6">
-      {loading ? (
+      {/* {loading ? (
         <Loading />
       ) : (
-        <>
-          <AddUserToGroup existingUsers={selectedChat.users} chatData={chatData} closeModal={closeModal}/>
-          <UsersGroupList
-            chatData={chatData}
-            data={selectedChat.users}
-            isAdmin={isAdmin}
-            currentUser={currentUser.user}
-            closeModal={closeModal}
-          />
-          {/* <div className="header bg-teal-800 text-white absolute top-0 left-0 right-0 px-6 py-3">
+        <> */}
+      <AddUserToGroup
+        existingUsers={selectedChat.users}
+        chatData={chatData}
+        closeModal={closeModal}
+      />
+
+      <div className="py-3 ">
+        <EditComponent selectedChat={selectedChat} />
+      </div>
+      <UsersGroupList
+        chatData={chatData}
+        data={selectedChat.users}
+        isAdmin={isAdmin}
+        currentUser={currentUser.user}
+        closeModal={closeModal}
+      />
+      {/* <div className="header bg-teal-800 text-white absolute top-0 left-0 right-0 px-6 py-3">
             <p>Group Members</p>
           </div>
           <ul role="list" className="divide-y divide-gray-100">
@@ -94,8 +105,8 @@ export default function ChatGroupDetails({ chatData,closeModal }) {
               </li>
             ))}
           </ul> */}
-        </>
-      )}
+      {/* </>
+        )} */}
 
       {/* <Loading/> */}
     </div>

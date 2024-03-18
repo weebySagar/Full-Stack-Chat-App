@@ -73,12 +73,14 @@ export default function MyModal({
                       </button>
                     </div>
                   )}
-                  {withTabs ?
-                  //  <TabContent tab={activeTab} firstTab={firstTab} secondTab={secondTab} /> 
-                  <div className="pt-6">
-                {  tabContentComponents[activeTab]}
-                  </div>
-                   : children}
+                  {withTabs ? (
+                    //  <TabContent tab={activeTab} firstTab={firstTab} secondTab={secondTab} />
+                    <div className="pt-6">
+                      {tabContentComponents[activeTab]}
+                    </div>
+                  ) : (
+                    children
+                  )}
                 </Dialog.Panel>
               </Transition.Child>
             </div>

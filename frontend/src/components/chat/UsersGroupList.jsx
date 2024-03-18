@@ -1,9 +1,11 @@
 import useFetch from "@hooks/useFetch";
 import React, { useEffect, useState } from "react";
+
 import { getGroupUsers } from "../../services/groupServices";
 import PopupMenu from "@components/ui/PopupMenu";
 import Loading from "@components/ui/Loading";
 import Badge from "@components/ui/Badge";
+import AvataImg from "@images/default-avatar.jpg";
 
 export default function UsersGroupList({
   chatData,
@@ -24,7 +26,7 @@ export default function UsersGroupList({
             <div className="flex min-w-0 gap-x-4 items-center">
               <img
                 className="h-10 w-10 flex-none rounded-full bg-gray-50"
-                src={user?.imageUrl}
+                src={user?.imageUrl || AvataImg}
                 alt=""
               />
               <div className="min-w-0 flex-auto">
