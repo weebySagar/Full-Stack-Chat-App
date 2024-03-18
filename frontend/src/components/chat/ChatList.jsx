@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import ChatHeader from "./ChatHeader";
 import ChatSearch from "./ChatSearch";
@@ -22,19 +22,39 @@ export default function ChatList() {
       setChats([...chats, ...data]); // Update chats state by
     }
   }, [data]);
+
+  const [filterChatValue, setFilterChatValue] = useState("");
+  const [filteredChats, setFilteredChats] = useState([]);
+  const [isFilteredChatOpen, setIsFilteredChatOpen] = useState(false);
   return (
     <div className="chat-list relative bg-neutral-300  h-full">
       <ChatHeader />
-      <ChatSearch />
+      <ChatSearch
+        filterChatValue={filterChatValue}
+        setFilterChatValue={setFilterChatValue}
+        setFilteredChats={setFilteredChats}
+        setIsFilteredChatOpen={setIsFilteredChatOpen}
+        isFilteredChatOpen={isFilteredChatOpen}
+      />
       <div className="list ">
         <ScrollableFeed>
-          {!loading ? (
-            chats?.map((chat) => (
-              <ChatItem {...chat} key={chat?.id} chatData={chat} />
-            ))
-          ) : (
-            <Loading />
-          )}
+          {isFilteredChatOpen &&
+            (filteredChats.length > 0 ? (
+              filteredChats.map(chat => (
+                <ChatItem {...chat} key={chat?.id} chatData={chat} />
+              ))
+            ) : (
+              <p className="p-4">No chat found</p>
+            ))}
+
+          {!isFilteredChatOpen &&
+            (!loading ? (
+              chats?.map(chat => (
+                <ChatItem {...chat} key={chat?.id} chatData={chat} />
+              ))
+            ) : (
+              <Loading />
+            ))}
         </ScrollableFeed>
       </div>
     </div>

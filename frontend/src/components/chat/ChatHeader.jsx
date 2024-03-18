@@ -9,7 +9,6 @@ import AvatarImg from "@images/default-avatar.jpg";
 
 export default function ChatHeader({ chatData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(chatData);
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };

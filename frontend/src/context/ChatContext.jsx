@@ -37,9 +37,6 @@ export const ChatProvider = ({ children }) => {
   };
 
   const updateGroupDetails = groupData => {
-    console.log(groupData);
-    // setSelectedChat()
-
     if (selectedChat) {
       setSelectedChat(chat => ({
         ...chat,

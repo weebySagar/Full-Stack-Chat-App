@@ -48,10 +48,8 @@ export const accessChat = async (userId) => {
             }
         })
 
-        console.log(data);
         return data
     } catch (error) {
-        console.log(error);
         throw error.response.data
     }
 }
@@ -64,10 +62,8 @@ export const getAllChats = async () => {
             }
         })
 
-        console.log(data);
         return data
     } catch (error) {
-        console.log(error);
         throw error.response.data
     }
 }
