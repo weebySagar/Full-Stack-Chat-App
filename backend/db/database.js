@@ -5,7 +5,7 @@ const mysql = require('mysql2')
 
 let config;
 
-if (process.env.NODE_ENV == 'development') {
+if (process.env.NODE_ENV == 'production') {
     config = {
         dialect: 'postgres',
         database: process.env.SUPABASE_DATABASE,
