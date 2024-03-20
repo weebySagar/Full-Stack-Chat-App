@@ -1,17 +1,68 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = import.meta.env.VITE_BACKEND_URL_API;
 
 
-export const sendMessage =async (msg) =>{
+export const sendMessage = async (message, image, chatId) => {
     try {
-        const response = await axios.post(BASE_URL+'/message/send',{msg},{
-            headers:{
-                'Authorization' :localStorage.getItem('chat-token')
+        const { data } = await axios.post(BASE_URL + '/message', { message, image, chatId }, {
+            headers: {
+                'Authorization': localStorage.getItem('chathub-token')
+
             }
         });
-        return response.status;
+        return data;
     } catch (error) {
         throw error.response.data;
+    }
+}
+
+export const getMessage = async (chatId, lastMsgId) => {
+    try {
+        // const { data } = await axios.get(BASE_URL + '/message?lastMsgId=' + lastMsgId, {
+        //     headers: {
+        //         'Authorization': localStorage.getItem('chathub-token')
+
+        //     }
+        // });
+        const { data } = await axios.get(BASE_URL + '/message/' + chatId, {
+            headers: {
+                'Authorization': localStorage.getItem('chathub-token')
+
+            }
+        });
+        return data;
+    } catch (error) {
+        throw error.response.data;
+    }
+}
+
+
+export const accessChat = async (userId) => {
+    try {
+        const { data } = await axios.post(BASE_URL + '/message/chats', { userId: JSON.stringify(userId) }, {
+            headers: {
+                'Authorization': localStorage.getItem('chathub-token')
+
+            }
+        })
+
+        return data
+    } catch (error) {
+        throw error.response.data
+    }
+}
+export const getAllChats = async () => {
+    try {
+        const { data } = await axios.get(BASE_URL + '/message/chats', {
+            headers: {
+                'Authorization': localStorage.getItem('chathub-token')
+
+            }
+        })
+
+        return data
+    } catch (error) {
+        throw error.response.data
     }
 }
