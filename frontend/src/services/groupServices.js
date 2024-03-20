@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = import.meta.env.VITE_BACKEND_URL_API;
 const token = localStorage.getItem('chathub-token')
 
 axios.defaults.headers.common['Authorization'] = token

@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "start": "cross-env NODE_ENV=production index.js"
+    "start": "cross-env NODE_ENV=production && cd ../frontend && npm run build && cd ../backend && node index.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

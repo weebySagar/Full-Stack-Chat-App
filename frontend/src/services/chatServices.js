@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = import.meta.env.VITE_BACKEND_URL_API;
 
 
 export const sendMessage = async (message, image, chatId) => {
