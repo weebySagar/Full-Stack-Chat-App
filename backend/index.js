@@ -18,11 +18,15 @@ const Image = require('./models/image-model');
 const User = require('./models/user-model');
 const Message = require('./models/message-model');
 const Chat = require('./models/chat-model');
+const ArchivedMessage = require('./models/archive-message-model')
 
 const userRoutes = require('./routes/user-route');
 const messageRoutes = require('./routes/message-route');
 const groupRoutes = require('./routes/group-route');
 
+const cronJob = require('./cron/cronJob');
+
+cronJob.start();
 
 app.use(cors())
 app.use(express.urlencoded({ extended: false }));

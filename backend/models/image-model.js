@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 
 const db = require('../db/database');
 const Message = require('./message-model');
+const ArchivedMessage = require('./archive-message-model');
 
 const Image = db.define('image', {
     id: {
@@ -18,5 +19,6 @@ const Image = db.define('image', {
 
 
 Message.belongsTo(Image)
+ArchivedMessage.belongsTo(Image)
 
 module.exports = Image;

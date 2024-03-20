@@ -1,7 +1,5 @@
 const Sequelize = require('sequelize');
 const db = require('../db/database');
-const User = require('./user-model');
-const Message = require('./message-model');
 
 const Chat = db.define('chat', {
     id: {
@@ -24,10 +22,6 @@ const Chat = db.define('chat', {
     latestMessageId: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        // references: {
-        //     model: 'messages',
-        //     key: 'id'
-        // }
     },
     chatName: {
         type: Sequelize.TEXT,
@@ -39,11 +33,5 @@ const Chat = db.define('chat', {
     }
 })
 
-// Chat.belongsToMany(User, { through: 'UserChat', as: 'users' });
-// Chat.belongsTo(User,{foreignKey:'groupAdminId',as:'groupAdmin'});
-// Chat.belongsTo(User,{foreignKey:'groupUsersId',as:'groupUsers'});
-
-// Chat.hasMany(Message, { foreignKey: 'chatId', as: 'messages' });
-// Chat.belongsTo(Message, { foreignKey: 'latestMessageId', as: 'latestMessage' })
 
 module.exports = Chat;

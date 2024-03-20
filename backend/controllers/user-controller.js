@@ -74,7 +74,6 @@ exports.updateUser = async (req, res) => {
     try {
         const userId = req.user.id;
         const { name, phone, imgUrl } = req.body;
-        console.log(req.body);
 
         const user = await User.findByPk(userId, {
             attributes: {

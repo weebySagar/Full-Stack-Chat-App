@@ -5,7 +5,6 @@ export const validateForm = (values, isSignup) => {
 
 
     if (!emailRegex.test(values?.email)) {
-        console.log('email');
         errors.email = "Invalid Email";
         valid = false;
 
@@ -18,9 +17,8 @@ export const validateForm = (values, isSignup) => {
     }
 
     if (isSignup) {
-       
+
         if (!values.name?.trim()) {
-            console.log('into name');
             errors.name = 'Required';
             valid = false;
         }

@@ -1,10 +1,8 @@
 const Sequelize = require('sequelize');
-
 const db = require('../db/database');
 const User = require('./user-model');
 
-
-const Message = db.define('message', {
+const ArchivedMessage = db.define('archivedMessage', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -24,9 +22,10 @@ const Message = db.define('message', {
         type: Sequelize.INTEGER,
         allowNull: false,
     },
+
 });
 
-User.hasMany(Message);
-Message.belongsTo(User);
+User.hasMany(ArchivedMessage);
+ArchivedMessage.belongsTo(User);
 
-module.exports = Message
+module.exports = ArchivedMessage;

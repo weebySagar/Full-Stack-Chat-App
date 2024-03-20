@@ -31,7 +31,6 @@ export const getMessage = async (chatId, lastMsgId) => {
 
             }
         });
-        // console.log(data);
         return data;
     } catch (error) {
         throw error.response.data;

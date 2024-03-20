@@ -18,7 +18,6 @@ export const loginUser = async (userData) => {
         localStorage.setItem('chathub-user', JSON.stringify(data.user))
         return data
     } catch (error) {
-        console.log(error);
         throw error.response.data
     }
 }
@@ -43,7 +42,6 @@ export const updateUser = async (user) => {
                 Authorization: localStorage.getItem('chathub-token')
             }
         })
-        console.log(data);
         return data
     } catch (error) {
         throw error.response.data
