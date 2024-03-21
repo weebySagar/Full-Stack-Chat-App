@@ -132,12 +132,25 @@ exports.accessChat = async (req, res) => {
     }
     const allUsers = JSON.parse(userId)
     allUsers.push(reqUserId)
-    const chat = await Chat.findOne({
-      where: {
-        isGroup: false,
-        [Op.and]: allUsers.map(userId => sequelize.literal(`JSON_CONTAINS(users, '${userId}')`))
-      },
-    });
+    let chat
+    if (process.env.NODE_ENV === 'production') {
+      chat = await Chat.findOne({
+        where: {
+          isGroup: false,
+          users: {
+            [Op.contains]: [userId], // Use Sequelize's Op.contains
+          },
+        },
+      });
+    }
+    else {
+      chat = await Chat.findOne({
+        where: {
+          isGroup: false,
+          [Op.and]: allUsers.map(userId => sequelize.literal(`JSON_CONTAINS(users, '${userId}')`))
+        },
+      });
+    }
 
 
     if (chat) {
@@ -180,14 +193,29 @@ exports.accessChat = async (req, res) => {
 
 exports.fetchChats = async (req, res) => {
   try {
-    console.log(req.body);
     const userId = req.user.id;
-    const chats = await Chat.findAll({
-      where: {
-        users: sequelize.literal(`JSON_CONTAINS(users, '${userId}')`)
-      },
-      order: [['updatedAt', 'DESC']]
-    })
+
+    let chats;
+    if (process.env.NODE_ENV === 'production') {
+      chats = await Chat.findAll({
+        where: {
+          users: {
+            [Op.contains]: [userId],
+          },
+        },
+        order: [['updatedAt', 'DESC']],
+      });
+    }
+
+    else {
+
+      chats = await Chat.findAll({
+        where: {
+          users: sequelize.literal(`JSON_CONTAINS(users, '${userId}')`)
+        },
+        order: [['updatedAt', 'DESC']]
+      })
+    }
 
 
     const populatedChats = await Promise.all(chats.map(async (chat) => {

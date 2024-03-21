@@ -1,4 +1,4 @@
-// const {col} = require('sequelize')
+const { Op } = require('sequelize')
 
 const Chat = require("../models/chat-model");
 const User = require("../models/user-model");
@@ -11,12 +11,25 @@ exports.removeUserFromGroup = async (req, res) => {
     const adminId = req.user.id;
     const { groupId, userId } = req.params;
 
-    const chat = await Chat.findOne({
-      where: {
-        id: groupId,
-        groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
-      }
-    })
+    let chat;
+    if (process.env.NODE_ENV === 'production') {
+      chat = await Chat.findOne({
+        where: {
+          id: groupId,
+          groupAdminId: {
+            [Op.contains]: [adminId], // Use Sequelize's Op.contains
+          },
+        },
+      });
+    }
+    else {
+      chat = await Chat.findOne({
+        where: {
+          id: groupId,
+          groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
+        }
+      })
+    }
 
     if (!chat) {
       return res.status(403).send('Unauthorized: only group admins can remove user')
@@ -40,12 +53,25 @@ exports.makeUserAdmin = async (req, res) => {
     const { groupId, userId } = req.params;
     const adminId = req.user.id;
 
-    const chat = await Chat.findOne({
-      where: {
-        id: groupId,
-        groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
-      }
-    })
+    let chat;
+    if (process.env.NODE_ENV === 'production') {
+      chat = await Chat.findOne({
+        where: {
+          id: groupId,
+          groupAdminId: {
+            [Op.contains]: [adminId], // Use Sequelize's Op.contains
+          },
+        },
+      });
+    }
+    else {
+      chat = await Chat.findOne({
+        where: {
+          id: groupId,
+          groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
+        }
+      })
+    }
 
     if (!chat) {
       return res.status(403).send('Unauthorized: only group admins can promote user')
@@ -68,12 +94,25 @@ exports.addUserToGroup = async (req, res) => {
     const adminId = req.user.id;
     const { userId, groupId } = req.body;
 
-    const chat = await Chat.findOne({
-      where: {
-        id: groupId,
-        groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
-      }
-    })
+    let chat;
+    if (process.env.NODE_ENV === 'production') {
+      chat = await Chat.findOne({
+        where: {
+          id: groupId,
+          groupAdminId: {
+            [Op.contains]: [adminId], // Use Sequelize's Op.contains
+          },
+        },
+      });
+    }
+    else {
+      chat = await Chat.findOne({
+        where: {
+          id: groupId,
+          groupAdminId: sequelize.literal(`JSON_CONTAINS(groupAdminId, '${adminId}')`)
+        }
+      })
+    }
 
 
     if (!chat) {
