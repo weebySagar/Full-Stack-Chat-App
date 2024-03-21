@@ -1,7 +1,7 @@
 const Message = require('../models/message-model');
 const sequelize = require('../db/database');
 
-const { Op } = require('sequelize');
+const { Op, cast } = require('sequelize');
 const User = require('../models/user-model');
 const Chat = require('../models/chat-model');
 const Image = require('../models/image-model');
@@ -138,7 +138,7 @@ exports.accessChat = async (req, res) => {
         where: {
           isGroup: false,
           users: {
-            [Op.contains]: [userId], // Use Sequelize's Op.contains
+            [Op.contains]: [cast(userId, 'string')], // Use Sequelize's Op.contains
           },
         },
       });
@@ -200,7 +200,7 @@ exports.fetchChats = async (req, res) => {
       chats = await Chat.findAll({
         where: {
           users: {
-            [Op.contains]: [userId],
+            [Op.contains]: [cast(userId, 'string')],
           },
         },
         order: [['updatedAt', 'DESC']],
