@@ -13,7 +13,7 @@ import Loading from "@components/ui/Loading";
 // import ChatBg from "@images/whatsapp-light-bg.png"
 // import ChatBg from "@images/whatsapp-dark-bg.png"
 
-const socket = io("http://localhost:3000");
+const socket = io(process.env.SOCKET_URL);
 // let socket;
 export default function ChatWindow() {
   const [messages, setMessages] = useState([]);
@@ -26,8 +26,8 @@ export default function ChatWindow() {
   useEffect(() => {
     // socket = io("http://localhost:3000");
     socket.on("connect", () => {});
-    socket.on("receive-message", (message) => {
-      setMessages((msgs) => [...msgs, message]);
+    socket.on("receive-message", message => {
+      setMessages(msgs => [...msgs, message]);
     });
 
     return () => {
@@ -72,7 +72,7 @@ export default function ChatWindow() {
       <div className="messages-wrapper  w-full h-full absolute pb-32 z-[1] ">
         <ScrollableFeed>
           {!loading ? (
-            messages?.map((msg) => (
+            messages?.map(msg => (
               <Message
                 msg={msg}
                 selectedChat={selectedChat}
