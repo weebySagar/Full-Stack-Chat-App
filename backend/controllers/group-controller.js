@@ -1,4 +1,4 @@
-const { Op } = require('sequelize')
+const { Op, cast } = require('sequelize')
 
 const Chat = require("../models/chat-model");
 const User = require("../models/user-model");
@@ -17,7 +17,7 @@ exports.removeUserFromGroup = async (req, res) => {
         where: {
           id: groupId,
           groupAdminId: {
-            [Op.contains]: [adminId], // Use Sequelize's Op.contains
+            [Op.contains]: [cast(adminId, 'string')], // Use Sequelize's Op.contains
           },
         },
       });
@@ -59,7 +59,7 @@ exports.makeUserAdmin = async (req, res) => {
         where: {
           id: groupId,
           groupAdminId: {
-            [Op.contains]: [adminId], // Use Sequelize's Op.contains
+            [Op.contains]: [cast(adminId, 'string')], // Use Sequelize's Op.contains
           },
         },
       });
@@ -100,7 +100,7 @@ exports.addUserToGroup = async (req, res) => {
         where: {
           id: groupId,
           groupAdminId: {
-            [Op.contains]: [adminId], // Use Sequelize's Op.contains
+            [Op.contains]: [cast(adminId, 'string')], // Use Sequelize's Op.contains
           },
         },
       });
