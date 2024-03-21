@@ -180,6 +180,7 @@ exports.accessChat = async (req, res) => {
 
 exports.fetchChats = async (req, res) => {
   try {
+    console.log(req.body);
     const userId = req.user.id;
     const chats = await Chat.findAll({
       where: {

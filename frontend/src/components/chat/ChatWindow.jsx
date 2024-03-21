@@ -13,7 +13,7 @@ import Loading from "@components/ui/Loading";
 // import ChatBg from "@images/whatsapp-light-bg.png"
 // import ChatBg from "@images/whatsapp-dark-bg.png"
 
-const socket = io(process.env.SOCKET_URL);
+const socket = io(import.meta.env.SOCKET_URL);
 // let socket;
 export default function ChatWindow() {
   const [messages, setMessages] = useState([]);
