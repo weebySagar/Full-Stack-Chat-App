@@ -138,7 +138,7 @@ exports.accessChat = async (req, res) => {
         where: {
           isGroup: false,
           users: {
-            [Op.contains]: [cast(userId, 'string')], // Use Sequelize's Op.contains
+            [Op.contains]: allUsers.map(userId => sequelize.literal(`users @> [${JSON.stringify(userId)}]`)), // Use Sequelize's Op.contains
           },
         },
       });
@@ -198,11 +198,7 @@ exports.fetchChats = async (req, res) => {
     let chats;
     if (process.env.NODE_ENV === 'production') {
       chats = await Chat.findAll({
-        where: {
-          users: {
-            [Op.contains]: [cast(userId, 'string')],
-          },
-        },
+        where: sequelize.literal(`users @> '[${JSON.stringify(userId)}]'`),
         order: [['updatedAt', 'DESC']],
       });
     }
