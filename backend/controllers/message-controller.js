@@ -138,7 +138,8 @@ exports.accessChat = async (req, res) => {
         where: {
           isGroup: false,
           users: {
-            [Op.contains]: allUsers.map(userId => sequelize.literal(`users @> [${JSON.stringify(userId)}]`)), // Use Sequelize's Op.contains
+            // [Op.contains]: allUsers.map(userId => sequelize.literal(`users @> [${JSON.stringify(userId)}]`)), // Use Sequelize's Op.contains
+            [Op.overlap]: allUsers
           },
         },
       });
@@ -198,13 +199,16 @@ exports.fetchChats = async (req, res) => {
     let chats;
     if (process.env.NODE_ENV === 'production') {
       chats = await Chat.findAll({
-        where: sequelize.literal(`users @> '[${JSON.stringify(userId)}]'`),
+        where: {
+          users: {
+            [Op.contains]: [userId]
+          }
+        },
         order: [['updatedAt', 'DESC']],
       });
     }
 
     else {
-
       chats = await Chat.findAll({
         where: {
           users: sequelize.literal(`JSON_CONTAINS(users, '${userId}')`)
