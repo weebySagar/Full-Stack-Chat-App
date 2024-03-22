@@ -1,4 +1,4 @@
-const { Op, cast } = require('sequelize')
+const { Op, cast, literal } = require('sequelize')
 
 const Chat = require("../models/chat-model");
 const User = require("../models/user-model");
@@ -16,9 +16,7 @@ exports.removeUserFromGroup = async (req, res) => {
       chat = await Chat.findOne({
         where: {
           id: groupId,
-          groupAdminId: {
-            [Op.contains]: [cast(adminId, 'string')], // Use Sequelize's Op.contains
-          },
+          groupAdminId: sequelize.literal(`CAST("groupAdminId" AS JSONB) @> '[${adminId}]'::JSONB`)
         },
       });
     }
@@ -58,9 +56,7 @@ exports.makeUserAdmin = async (req, res) => {
       chat = await Chat.findOne({
         where: {
           id: groupId,
-          groupAdminId: {
-            [Op.contains]: [cast(adminId, 'string')], // Use Sequelize's Op.contains
-          },
+          groupAdminId: sequelize.literal(`CAST("groupAdminId" AS JSONB) @> '[${adminId}]'::JSONB`)
         },
       });
     }
@@ -99,9 +95,7 @@ exports.addUserToGroup = async (req, res) => {
       chat = await Chat.findOne({
         where: {
           id: groupId,
-          groupAdminId: {
-            [Op.contains]: [cast(adminId, 'string')], // Use Sequelize's Op.contains
-          },
+          groupAdminId: sequelize.literal(`CAST("groupAdminId" AS JSONB) @> '[${adminId}]'::JSONB`)
         },
       });
     }

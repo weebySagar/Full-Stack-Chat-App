@@ -18,13 +18,13 @@ if (process.env.NODE_ENV == 'production') {
 }
 else {
     config = {
-        dialect: 'mysql',
-        database: process.env.SQL_DATABASE_NAME,
-        password: process.env.SQL_PASSWORD,
-        username: process.env.SQL_USERNAME,
-        port: process.env.SQL_PORT,
-        host: process.env.SQL_HOST,
-        getDialect: mysql
+        dialect: 'postgres',
+        database: process.env.POSTGRES_DATABASE_NAME,
+        password: process.env.POSTGRES_PASSWORD,
+        username: process.env.POSTGRES_USERNAME,
+        port: process.env.POSTGRES_PORT,
+        host: process.env.POSTGRES_HOST,
+        getDialect: pg
     }
 }
 

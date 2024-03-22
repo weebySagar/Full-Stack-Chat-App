@@ -1,7 +1,7 @@
 const Message = require('../models/message-model');
 const sequelize = require('../db/database');
 
-const { Op, cast } = require('sequelize');
+const { Op, cast, literal } = require('sequelize');
 const User = require('../models/user-model');
 const Chat = require('../models/chat-model');
 const Image = require('../models/image-model');
@@ -109,7 +109,7 @@ exports.getMessage = async (req, res) => {
       include: {
         model: Image,
       },
-      order: [['timestamp', 'ASC']]
+      order: [['timeStamp', 'ASC']]
     })
     if (messages) {
       res.status(200).send(messages)
@@ -138,8 +138,7 @@ exports.accessChat = async (req, res) => {
         where: {
           isGroup: false,
           users: {
-            // [Op.contains]: allUsers.map(userId => sequelize.literal(`users @> [${JSON.stringify(userId)}]`)), // Use Sequelize's Op.contains
-            [Op.overlap]: allUsers
+            [Op.and]: allUsers.map(userId => literal(`users::jsonb @> '[${userId}]'::jsonb`))
           },
         },
       });
@@ -199,11 +198,7 @@ exports.fetchChats = async (req, res) => {
     let chats;
     if (process.env.NODE_ENV === 'production') {
       chats = await Chat.findAll({
-        where: {
-          users: {
-            [Op.contains]: [userId]
-          }
-        },
+        where: literal(`CAST("users" AS JSONB) @> '[${userId}]'::JSONB`),
         order: [['updatedAt', 'DESC']],
       });
     }
