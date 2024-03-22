@@ -17,7 +17,8 @@ const Chat = db.define('chat', {
     },
     groupAdminId: {
         type: Sequelize.JSON,
-        allowNull: true
+        allowNull: true,
+        field: 'groupAdminId'
     },
     latestMessageId: {
         type: Sequelize.INTEGER,
