@@ -7,7 +7,12 @@ axios.defaults.headers.common['Authorization'] = token
 
 export const createGroup = async (chatName, userId) => {
     try {
-        const { data } = await axios.post(BASE_URL + '/group/create-group', { chatName, userId: JSON.stringify(userId) });
+        const { data } = await axios.post(BASE_URL + '/group/create-group', { chatName, userId: JSON.stringify(userId) }, {
+            headers: {
+                'Authorization': token
+
+            }
+        });
         return data;
     } catch (error) {
         throw error.response.data;
@@ -37,7 +42,12 @@ export const getGroupUsers = async (groupId) => {
 
 export const removeUserFromGroup = async (groupId, userId) => {
     try {
-        const { data } = await axios.delete(`${BASE_URL}/group/${groupId}/user/${userId}`,)
+        const { data } = await axios.delete(`${BASE_URL}/group/${groupId}/user/${userId}`, {
+            headers: {
+                'Authorization': token
+
+            }
+        })
 
         return data
     } catch (error) {
