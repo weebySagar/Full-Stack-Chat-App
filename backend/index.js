@@ -37,6 +37,8 @@ app.use('/api/user', userRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/group', groupRoutes);
 
+console.log(process.env.NODE_ENV);
+
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/dist')));
     app.get("*", (req, res) => {
